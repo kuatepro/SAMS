@@ -1,0 +1,135 @@
+<?php
+include 'db.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Register</title>
+    <link rel="stylesheet" href="Teachers Register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+     <div class="container">
+        <div class="left-section">
+            <img src="logo.jpg" alt="logo">
+            <h1>Welcome to SAMS</h1>
+            <p>With PAMS, you can post student class participation, attendance, and performance for their parents to view.</p>
+            <!--<button class="btn login-btn">LOGIN</button>-->
+            <a href="teacher-login.php" class="form-1" id="forms"><span>LOGIN</span></a>
+             
+        </div>
+        <div class="right-section">
+            <h2>You register as a Teacher</h2>
+            <div id="errorMsg" style="color: red; margin-bottom: 10px; text-align: center;"></div>
+            <form id="registration-form" action="teacher-register-process.php" method="POST">
+                <div class="input-group">
+                    <input type="text" id="full-name" name="fullname" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="contact" name="contact" placeholder="Contact (9 digits)" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                
+               <!-- <div class="form-gride">
+                    <div class="input-group">
+                        <input type="number" id="age" placeholder="Age" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="address" placeholder="Address" required>
+                    </div>
+                </div>
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder="Email" required>
+                    </div>-->
+                
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="remember"> Remember me
+                    </label>
+                    <p><a href="#" class="forgot-password"><span>Forgot password</span>?</a></p>
+                </div>
+                <button type="submit" class="btn register-btn">REGISTER</button>
+            </form>
+            
+            <div class="social-buttons">
+                <a href="#"><i class="fa-brands fa-google fa-" style="color: #ff0000;"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook fa-bounce" style="color: #0080ff;"></i></a>
+               <!--- <button class="btn google-btn">Google</button>
+                <button class="btn facebook-btn">Facebook</button> -->
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Copyright &copy; <span class="logo">SAMS</span>,2025</p>
+    </footer>
+
+
+<script>
+document.getElementById('registration-form').addEventListener('submit', function(e) {
+    let fullname = document.getElementById('full-name').value.trim();
+    let contact = document.getElementById('contact').value.trim();
+    let password = document.getElementById('password').value;
+    let email = document.getElementById('email').value.trim();
+    let errorMsg = document.getElementById('errorMsg');
+    errorMsg.textContent = "";
+
+    if(!fullname){
+        e.preventDefault();
+        errorMsg.textContent = "Full Name is required!";
+        return;
+    }
+    if(fullname.length > 12){
+        e.preventDefault();
+        errorMsg.textContent = "Full Name cannot exceed 12 characters!";
+        return;
+    }
+    if(fullname.length < 5){
+        e.preventDefault();
+        errorMsg.textContent = "Full name should be greater than 5 characters!";
+        return;
+    }
+    if(!contact){
+        e.preventDefault();
+        errorMsg.textContent = "Contact is required!";
+        return;
+    }
+    if(!/^\d{9}$/.test(contact)){
+        e.preventDefault();
+        errorMsg.textContent = "Contact must be exactly 9 digits!";
+        return;
+    }
+    if(!password){
+        e.preventDefault();
+        errorMsg.textContent = "Password is required!";
+        return;
+    }
+    if(password.length < 6){
+        e.preventDefault();
+        errorMsg.textContent = "Password must be at least 6 characters!";
+        return;
+    }
+    if(!email){
+        e.preventDefault();
+        errorMsg.textContent = "Email is required!";
+        return;
+    }
+    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if(!emailPattern.test(email)){
+        e.preventDefault();
+        errorMsg.textContent = "Invalid email format!";
+        return;
+    }
+    // If all validations pass, allow form to submit
+});
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #0a3896;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.container {
+    background: #0a3896;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+.Parent-button{
+    background: #1ed99b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 18px 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-decoration: none;
+}
+
+h1 {
+    color: #fff;
+    font-size: 2.8rem;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+.subtitle {
+    color: #dbe6fd;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.role-section {
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.role-title {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.role-hint {
+    color: #dbe6fd;
+    font-size: 0.95rem;
+    font-weight: 400;
+    margin-left: 8px;
+}
+
+.emoji {
+    font-size: 1.1rem;
+}
+
+.role-buttons {
+    display: flex;
+    gap: 30px;
+    margin-top: 25px;
+}
+
+/*.role-btn {
+    background: #1ed99b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 18px 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.role-btn:hover {
+    background: #17b87a;
+    transform: translateY(-2px) scale(1.04);
+}*/
+.Parent-button:hover{
+    background: #17b87a;
+    transform: translateY(-2px) scale(1.04);
+
+}
+
+.Teacher-button{
+    background: #1ed99b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 18px 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-decoration: none;
+}
+.Admin-button{
+    background: #1ed99b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 18px 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-decoration: none;
+}
+.Admin-button:hover{
+    background: #17b87a;
+    transform: translateY(-2px) scale(1.04);
+
+
+}
+.Teacher-button:hover{
+    background: #17b87a;
+    transform: translateY(-2px) scale(1.04);
+
+
+}

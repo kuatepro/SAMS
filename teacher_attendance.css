@@ -1,0 +1,68 @@
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+}
+
+header {
+  background: #2c3e50;
+  color: #fff;
+  padding: 1rem;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.controls {
+  margin-top: 1rem;
+}
+
+#week-buttons {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+#week-buttons button {
+  margin: 0 4px;
+  padding: 5px 10px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+main {
+  padding: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+footer {
+  padding: 1rem;
+  text-align: right;
+}
+
+footer button {
+  padding: 10px 15px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  background: #27ae60;
+  color: white;
+}
+
+footer button#create-week-btn {
+  background: #e67e22;
+}
