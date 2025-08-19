@@ -86,8 +86,9 @@ header h1 {
   background-color: #1ed99b;
   width: 150px;
   text-decoration: none;
-  margin-top: 300%;
+  margin-top: 260%;
 }
+
 #notif h3{
   display: flex;
   justify-content: center;
@@ -234,14 +235,13 @@ tr:nth-child(even) {
 }
 footer {
   text-align: center;
-  padding: 20px;
   position: fixed;
+  height: 50px;
   left: 0;
   right: 0;
   bottom: 0;
   background: #fff;
-  z-index: 100;
-  margin-top: 20px;
+
 }
 
 @media(max-width:700px){

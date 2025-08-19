@@ -25,7 +25,7 @@ if (!isset($_SESSION['admin_id'])) {
         <a href="#">Parents</a>
         <a href="#">Teachers</a>
         <a href="#">Students</a>
-        <a href="admin-logout.php" class="log"><span>Log out</span></a>
+        <a href="admin-logout.php" id="less" onclick="return confirmLogout()" ><span>Log out</span></a>
         
     </nav>
 </aside>
@@ -141,6 +141,9 @@ if (!isset($_SESSION['admin_id'])) {
     </section>
 
 </main>
+ <footer>
+        <p>Copyright &copy; <span class="logo">SAMS</span>,2025</p>
+</footer>
 
 <!-- JavaScript -->
 <script>
@@ -169,10 +172,14 @@ if (!isset($_SESSION['admin_id'])) {
         document.getElementById("infoList").prepend(listItem);
         this.reset();
     });
+
+       
+          function confirmLogout() {
+      return confirm("Are you sure you want to logout from your account?");
+    }
+    
 </script>
- <footer>
-        <p>Copyright &copy; <span class="logo">SAMS</span>,2025</p>
-</footer>
+
 
     
 </body>

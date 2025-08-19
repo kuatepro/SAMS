@@ -24,7 +24,7 @@ if (!isset($_SESSION['parent_id'])) {
             <a href="studentinfo.php">My Child</a>
             <a href="contact.php">Contact Us</a>
             
-            <a href="parent-logout.php" class="log"><span>Log Out</span> </a>
+            <a href="parent-logout.php" onclick="return confirmLogout()"  class="log"><span>Log Out</span> </a>
           
 
         </nav>
@@ -145,8 +145,16 @@ if (!isset($_SESSION['parent_id'])) {
             </table>
         </section>
     </main>
+     <footer>
+        <p>Copyright &copy;SAMS ,2025</p>
+</footer>
+    <script>
+          function confirmLogout() {
+      return confirm("Are you sure you want to logout from your account?");
+    }
+    </script>
 
-
+ 
 </body>
 </html>
 

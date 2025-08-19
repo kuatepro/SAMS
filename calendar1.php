@@ -143,7 +143,7 @@ span{
     <aside class="sidebar">
         <img src="logo.jpg" alt="logo" class="logo">
         <nav>
-            <a href="Teacherb.html">Dashboard</a>
+            <a href="Teacherb.php">Dashboard</a>
         </nav>
     </aside>
   <header>

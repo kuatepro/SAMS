@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-    background: #0a3896;
+   background: #0a3896;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -137,4 +137,14 @@ h1 {
     transform: translateY(-2px) scale(1.04);
 
 
+}
+#big-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.2;
 }

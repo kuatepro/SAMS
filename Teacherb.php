@@ -50,6 +50,15 @@ if (!empty($students)) {
     <title>Document</title>
     <link rel="stylesheet" href="Teacherb.css">
 </head>
+<!--<script>
+  function logoutConfirm() {
+    swal.fire({
+      title: 'Are you sure?' ,
+      text: "You will be logged out from your account.",
+      icon
+    })
+  }
+</script>-->
 <body>
   <nav class="sidebar">
      <img src="logo.jpg" alt="logo">
@@ -57,7 +66,7 @@ if (!empty($students)) {
     <a href="contact.php">Contact Us</a>
 
     
-    <a href="teacher-logout.php" class="log"><span>Log out</span></a>
+    <a href="teacher-logout.php" onclick="return confirmLogout()"       class="log"><span>Log out</span></a>
   </nav>
   
 
@@ -168,6 +177,10 @@ if (!empty($students)) {
   </table>
 
   </main>
+     <footer>
+        <p>Copyright &copy SAMS , 2025</p>
+    </footer>
+    
   
  
 
@@ -196,6 +209,10 @@ if (!empty($students)) {
       `;
       tbody.appendChild(tr);
     });
+
+    function confirmLogout() {
+      return confirm("Are you sure you want to logout from your account?")
+    }
   </script>
 
   

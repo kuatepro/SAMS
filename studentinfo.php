@@ -48,7 +48,7 @@ $children = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </nav>
 
 <main class="main">
-    <header>📊 Student Attendance Dashboard</header>
+    <header> Student Attendance Dashboard</header>
 
     <!-- Summary Cards 
     <div class="summary">
