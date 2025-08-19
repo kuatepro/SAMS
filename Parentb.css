@@ -91,6 +91,7 @@ body {
     transform: scale(1.1);
     transition: all 0.3s ease;
 }
+
 footer {
   text-align: center;
   position: fixed;
@@ -191,11 +192,21 @@ table th, table td {
     box-shadow:0 0 8px rgba(0,0,0,0.1); 
     text-align:center; 
 }
-#notif h3{
+#notifs h3{
     display: flex;
     justify-content: center;
     align-items: center;
     color: #004085;
+}
+#notif li {
+    background-color: #f9f9f9;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-bottom: 10px;
+    border-left: 4px solid #007BFF;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+
 }
 .card h3 { 
     margin-bottom:10px; 

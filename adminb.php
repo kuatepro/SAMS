@@ -1,10 +1,54 @@
 <?php
 include 'db.php';
 session_start();
+
 if (!isset($_SESSION['admin_id'])) {
     header('Location: admin-login.php');
     exit();
 }
+if(isset($_POST['submit_post'])) {
+    $title = $_POST['infoTitle'];
+    $content = $_POST['infoContent'];
+
+    $sql = "INSERT INTO posts (title, content, posted_by) VALUES (?, ?, 'admin')";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $title, $content);
+    $stmt->execute();
+    $stmt->close();
+
+
+   
+    header("Location: adminb.php");
+    exit();
+
+    
+    
+}
+if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
+    $delete_id = $_POST['delete_id'];
+
+    $stmt = $conn->prepare("DELETE FROM posts WHERE post_id = ?");
+    if (!$stmt) {
+        die("SQL error: " . $conn->error);
+    }
+    $stmt->bind_param("i", $delete_id);
+    $stmt->execute();
+   // $sql = "DELETE FROM posts WHERE id = ?";
+    //$stmt = $conn->prepare($sql);
+    //$stmt->bind_param("i", $postId);
+  //  if ($stmt->affected_rows > 0){
+    //    echo "Post Deleted successfully!";
+    //}else {
+     //   echo "Error deleting post: ";
+    //}
+   
+
+    $stmt->close();
+    header("Location: adminb.php");
+    exit();
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,6 +79,12 @@ if (!isset($_SESSION['admin_id'])) {
 
     <!-- Topbar -->
     <header class="topbar">
+        <?php
+        if (isset($_SESSION['message'])) {
+            echo "<p style='color:green;'>" . $_SESSION['message'] . "</p>";
+            unset($_SESSION['message']);
+        }
+        ?>
         <h1>Admin Dashboard  </h1>
         <h2>Welcome, <?php echo $_SESSION['admin_name']; ?> 👑</h2>
         <div class="user-info">🛠 Admin</div>
@@ -43,13 +93,35 @@ if (!isset($_SESSION['admin_id'])) {
     <!-- Post School Info -->
     <section class="card">
         <h2>Post School Info</h2>
-        <form id="postForm">
-            <input type="text" id="infoTitle" placeholder="Title" required>
-            <textarea id="infoContent" placeholder="Write school update..." rows="4" required></textarea>
-            <button type="submit" class="submit-btn">Post Info</button>
+        <form  method="POST">
+            <input type="text" name="infoTitle" id="infoTitle" placeholder="Title" required>
+            <textarea id="infoContent" name="infoContent" placeholder="Write school update..." rows="4" required></textarea>
+            <button type="submit" name="submit_post" class="submit-btn">Post Info</button>
         </form>
         <h3>Latest Announcements:</h3>
-        <ul id="infoList"></ul>
+        <ul  id="infoList"  style="list-style: none; padding: 0; margin: 0;">
+            <?php
+            $sql = "SELECT * FROM posts ORDER BY post_date DESC";
+            $result = $conn->query($sql);
+
+            if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<li style='margin-bottom: 10px; padding: 8px; background:#f9f9f9; border-left:4px solid #007BFF; border-radius: 4px;'>";
+                    echo "<strong>" . $row['title'] . "</strong>: " . $row['content'];
+                    echo "<br><small>Posted by: ".$row['posted_by']." on ".$row['post_date']."</small>";
+                    echo "<form method='POST' style='margin-top: 5px;'>";
+                    echo "<input type='hidden' name='delete_id' value='".$row['post_id']."'>";
+                    echo "<button type='submit' name='delete_post' style='background:#d9534f;color:white;border:none;padding:3px 8px;border-radius: 4px;cursor:pointer;'>Delete</button>";
+                    echo "</form>"; 
+                    echo "</li>";
+                }
+            } else {
+                echo "<li>No announcements available.</li>";
+            }
+            ?>
+            
+        </ul>
+        
     </section>
 
     <!-- Parents List -->
@@ -68,19 +140,38 @@ if (!isset($_SESSION['admin_id'])) {
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <?php
+            $parents = $conn->query("SELECT  p.parent_id, p.fullname, p.phone, s.fullname AS student
+            FROM parents p 
+            LEFT JOIN students s ON p.parent_id = s.parent_id");
+            if ($parents && $parents->num_rows > 0) {
+                while ($row = $parents->fetch_assoc()) {
+                    echo "<tr>
+                     <td>{$row['fullname']}</td>;
+                     <td>{$row['student']}</td>;
+                     <td>{$row['phone']}</td>;
+                     <td><button onclick='removeRow(this)'>Remove</button></td>
+                    </tr>";
+                }
+            } else {
+                echo "<tr><td colspan='4'>No parents found.</td></tr>";
+            }
+            
+           
+            ?>
+           <!-- <tbody>
                 <tr>
-                    <td>John Doe</td>
+                    <td>Marc</td>
                     <td>Michael Doe</td>
                     <td>+237 670 000 000</td>
                     <td><button onclick="removeRow(this)">Remove</button></td>
                 </tr>
                 <tr>
-                    <td>Jane Smith</td>
+                    <td>Emma</td>
                     <td>Sarah Smith</td>
                     <td>+237 671 111 111</td>
                     <td><button onclick="removeRow(this)">Remove</button></td>
-                </tr>
+                </tr>-->
             </tbody>
         </table>
     </section>
@@ -163,7 +254,7 @@ if (!isset($_SESSION['admin_id'])) {
     }
 
     // Post School Info
-    document.getElementById("postForm").addEventListener("submit", function(e) {
+  /*  document.getElementById("postForm").addEventListener("submit", function(e) {
         e.preventDefault();
         let title = document.getElementById("infoTitle").value;
         let content = document.getElementById("infoContent").value;
@@ -171,7 +262,7 @@ if (!isset($_SESSION['admin_id'])) {
         listItem.innerHTML = `<strong>${title}</strong>: ${content}`;
         document.getElementById("infoList").prepend(listItem);
         this.reset();
-    });
+    });*/
 
        
           function confirmLogout() {

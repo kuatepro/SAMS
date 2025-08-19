@@ -90,8 +90,23 @@ if (!empty($students)) {
     </div>
      <div id="notif" style="background: white;padding: 10px;border-radius: 8px;margin-bottom: 15px;">
             <h3>  School notifications</h3>
-            <ul id="notiflist" 
-                style="list-style: none;padding: 0;margin: 0;">
+            
+            <ul style="list-style: none;padding: 0;margin: 0;">
+              <?php
+              $sql = "SELECT * FROM posts ORDER BY post_date DESC"; // shows latest info first
+              $result = $conn->query($sql);
+
+              if ($result && $result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                  echo "<li style='margin-bottom: 10px; padding: 8px; background:#f9f9f9; border-left:4px solid #007BFF; border-radius: 4px;'>";
+                  echo "<strong>" . htmlspecialchars($row['title']) . "</strong>: " . htmlspecialchars($row['content']);
+                  echo "<br><small>Posted by: " . htmlspecialchars($row['posted_by']) . " on " . htmlspecialchars($row['post_date']) . "</small>";
+                  echo "</li>";
+                }
+              } else {
+                echo "<div class='notifCard'>No announcements yet.</div>";
+              }
+              ?>
                 <!--notifications displays here-->
             </ul>
         </div>

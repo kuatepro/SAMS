@@ -11,25 +11,31 @@ if (!isset($_SESSION['parent_id'])) {
 $parent_id = $_SESSION['parent_id'];
 $search = "";
 
-// Handle search
-if (isset($_GET['search'])) {
-    $search = trim($_GET['search']);
-}
-
-// Fetch children of this parent
+// Base query
 $query = "SELECT * FROM students WHERE parent_id = ?";
+$types = "i"; 
 $params = [$parent_id];
 
-if ($search != "") {
+if (isset($_GET['search']) && trim($_GET['search']) != "") {
+    $search = trim($_GET['search']);
     $query .= " AND (full_name LIKE ? OR matricule LIKE ?)";
-    $params[] = "%$search%";
-    $params[] = "%$search%";
+    $types .= "ss";
+    $like = "%$search%";
+    $params[] = $like;
+    $params[] = $like;
 }
 
 $stmt = $conn->prepare($query);
-$stmt->execute($params);
-$children = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Build dynamic bind_param
+$stmt->bind_param($types, ...$params);
+
+$stmt->execute();
+$result = $stmt->get_result();
+$children = $result->fetch_all(MYSQLI_ASSOC);
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

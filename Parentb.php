@@ -38,11 +38,24 @@ if (!isset($_SESSION['parent_id'])) {
              <h2>Welcome, <?php echo $_SESSION['parent_name']; ?> 😊</h2>
            
         </header>
-        <div id="notif" style="background: white;padding: 10px;border-radius: 8px;margin-bottom: 15px;">
-            <h3>  School notifications</h3>
-            <ul id="notiflist" 
-                style="list-style: none;padding: 0;margin: 0;">
+        <div id="notifs" style="background: white;padding: 10px;border-radius: 8px;margin-bottom: 15px;">
+            <h3>  School Notifications</h3>
+            <ul  style="list-style: none;padding: 0;margin: 0;">
                 <!--notifications displays here-->
+                <?php
+                $sql = "SELECT * FROM posts ORDER BY post_date DESC "; // shows lates info first
+                $result = $conn->query($sql);
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<li style='margin-bottom: 10px; padding: 8px; background:#f9f9f9; border-left:4px solid #007BFF; border-radius: 4px;'>";
+                        echo "<strong>".$row['title']."</strong>:".$row['content'];
+                        echo "<br><small>Posted by: ". $row['posted_by']." on ".$row['post_date']."</small>";
+                        echo "</li>";
+                    }
+                } else {
+                    echo "<li>No notifications available.</li>";
+                }
+                ?>
             </ul>
         </div>
           <!-- Summary Cards -->
@@ -139,7 +152,7 @@ if (!isset($_SESSION['parent_id'])) {
                         <td>Wilson</td>
                         <td>SAMS208</td>
                         <td>2025-08-5</td>
-                        <td class="absent">Absent</td>/td>
+                        <td class="absent">Absent</td>
                     </tr>
                 </tbody>
             </table>

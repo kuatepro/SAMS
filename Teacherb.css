@@ -91,6 +91,7 @@ header h1 {
 
 #notif h3{
   display: flex;
+
   justify-content: center;
   align-items: center;
   color: #004085;
@@ -103,6 +104,8 @@ header h1 {
   transform: scale(1.1);
   transition: all 0.3s ease;
 }
+
+
 span {
   color: white;
   font-weight: bold;
