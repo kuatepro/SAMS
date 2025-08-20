@@ -163,7 +163,9 @@ span{
       </select>
 
       <input type="text" id="searchInput" placeholder="🔍 Search student ">
+      <button onclick="saveAttendance()">💾 Save Attendance</button>
     </div>
+
 
     <div id="weeksContainer"></div>
 
@@ -313,7 +315,7 @@ span{
       });
     }
 
-    function addStudent(key, weekNum) {
+   /* function addStudent(key, weekNum) {
       const input = document.getElementById(`studentInput-${key}-${weekNum}`);
       const name = input.value.trim();
       if (!name) {
@@ -324,7 +326,32 @@ span{
       week.students.push({ name, attendance: Array(6).fill(null) });
       input.value = "";
       renderWeeks();
-    }
+    }*/
+
+
+
+
+
+function loadStudents() {
+  fetch("get_students.php")
+    .then(response => response.json())
+    .then(data => {
+      data.forEach(student => {
+        // Add each student to current week
+        weeks['${currentYear}-${currentMonth}'].forEach(week => {
+          week.students.push({
+            id: student.student_id,
+            name: student.fullname,
+            attendance: Array(daysOfWeek.length).fill(null)
+          });
+        });
+      });
+      renderWeeks();
+    });
+}
+
+
+
 
     function setAttendance(key, weekNum, studentIdx, dayIdx, value) {
       const week = weeks[key].find(w => w.number === weekNum);
@@ -334,6 +361,41 @@ span{
 
     // Initial render
     renderWeeks();
+function saveAttendance() {
+  const key = '${currentYear}-${currentMonth}';
+  let attendanceData = [];
+
+  if (!weeks[key]) return;
+
+  weeks[key].forEach(week => {
+    week.students.forEach(student => {
+      student.attendance.forEach((status, dayIdx) => {
+        if (status) {
+          const today = new Date(currentYear, currentMonth, (week.number-1)*7 + dayIdx + 1);
+          const dateStr = today.toISOString().split('T')[0]; 
+
+          attendanceData.push({
+            student_id: student.id, // you must replace with real student_id from DB
+            date: dateStr,
+            status: status
+          });
+        }
+      });
+    });
+  });
+
+  fetch("save_attendance.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "attendance=" + encodeURIComponent(JSON.stringify(attendanceData))
+  })
+  .then(res => res.text())
+  .then(msg => alert(msg));
+}
+
+
+document.addEventListener("DOMContentLoaded",loadStudents);
+
   </script>
     <footer>
         <p>Copyright &copy; <span class="logo">SAMS</span>,2025</p>

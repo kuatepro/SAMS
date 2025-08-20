@@ -105,7 +105,39 @@ if (!isset($_SESSION['parent_id'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <?php
+$parent_id = $_SESSION['parent_id'];
+
+// get only the parent’s children
+$sql = "SELECT s.student_id, s.fullname, a.date, a.status
+        FROM students s
+        LEFT JOIN attendance a ON s.student_id = a.student_id
+        WHERE s.parent_id = ?
+        ORDER BY a.date DESC LIMIT 10";
+$stmt = $conn->prepare($sql);
+if(!$stmt) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $parent_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>".$row['fullname']."</td>";
+        echo "<td>".$row['student_id']."</td>";
+        echo "<td>".$row['date']."</td>";
+        echo "<td class='".($row['status']=='Present'?'present':'absent')."'>".$row['status']."</td>";
+        echo "</tr>";
+    }
+} else {
+    echo "<tr><td colspan='4'>No attendance records found.</td></tr>";
+}
+?>
+
+
+                   <!-- <tr>
                     
                         <td>John</td>
                         <td>SAMS201</td>
@@ -153,7 +185,7 @@ if (!isset($_SESSION['parent_id'])) {
                         <td>SAMS208</td>
                         <td>2025-08-5</td>
                         <td class="absent">Absent</td>
-                    </tr>
+                    </tr>-->
                 </tbody>
             </table>
         </section>

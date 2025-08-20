@@ -189,7 +189,34 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
                 </tr>
             </thead>
             <tbody>
-                <tr>
+
+
+<?php
+$sql = "SELECT s.student_id, s.fullname, s.class, 
+               ROUND(SUM(a.status='Present') / COUNT(a.attendance_id) * 100, 1) as attendance_rate
+        FROM students s
+        LEFT JOIN attendance a ON s.student_id = a.student_id
+        GROUP BY s.student_id";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>".$row['fullname']."</td>";
+        echo "<td>".$row['class']."</td>";
+        echo "<td>".($row['attendance_rate'] ?? 0)."%</td>";
+        echo "</tr>";
+    }
+} else {
+    echo "<tr><td colspan='3'>No students found.</td></tr>";
+}
+?>
+
+
+
+
+
+               <!-- <tr>
                     <td>Mr. Brown</td>
                     <td>Math</td>
                     <td>+237 672 222 222</td>
@@ -200,7 +227,7 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
                     <td>Science</td>
                     <td>+237 673 333 333</td>
                     <td><button onclick="removeRow(this)">Remove</button></td>
-                </tr>
+                </tr>-->
             </tbody>
         </table>
     </section>

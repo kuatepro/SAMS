@@ -6,6 +6,7 @@ if (!isset($_SESSION['teacher_id'])) {
   exit();
 }
 
+
 // Fetch students and attendance for this teacher
 $teacher_id = $_SESSION['teacher_id'];
 $students = [];
@@ -66,7 +67,7 @@ if (!empty($students)) {
     <a href="contact.php">Contact Us</a>
 
     
-    <a href="teacher-logout.php" onclick="return confirmLogout()"       class="log"><span>Log out</span></a>
+    <a href="teacher-logout.php" onclick="return confirmLogout()" class="log"><span>Log out</span></a>
   </nav>
   
 
