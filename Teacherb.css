@@ -26,7 +26,7 @@ img {
   background-color: #1ed99b;
   width: 170px;
   text-decoration: none;
-  margin-top: 100%;
+
 }
 .log:hover{
   background-color: #059669;
@@ -86,7 +86,7 @@ header h1 {
   background-color: #1ed99b;
   width: 150px;
   text-decoration: none;
-  margin-top: 260%;
+  margin-top: 240%;
 }
 
 #notif h3{
@@ -104,7 +104,6 @@ header h1 {
   transform: scale(1.1);
   transition: all 0.3s ease;
 }
-
 
 span {
   color: white;

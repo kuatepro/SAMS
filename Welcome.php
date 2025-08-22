@@ -10,24 +10,27 @@ include 'db.php'
     <link rel="stylesheet" href="Welcome.css">
 </head>
 <body>
-   <!-- <video autoplay muted loop id="big-video">
-    <source src="iann_dior_-_Holding_On__Official_Music_Video_(360p).mp4"></video>-->
+    <video autoplay muted loop id="big-video">
+    <source src="Video.mp4"></video>
     <div class="container">
         <div class="logo">
             <img src="logo.jpg" alt="Logo" style="width: 90px; height: 90px; object-fit: contain; background: transparent; border-radius: 10px;" />
         </div>
+        <div id="dynamic-content" class="fade-container">
         <h1>Welcome to SAMS</h1>
         <p class="subtitle">Stay connected stay informed</p>
         <div class="role-section">
-            <p class="role-title">What is your role ? <span class="role-hint">Click below to continue <span class="emoji">👇</span></span></p>
+          
+               <p class="role-title">What is your role ? <span class="role-hint">Click below to continue <span class="emoji">👇</span></span></p>
             <div class="role-buttons">
-               
-                <a href="Admin-Register.php" class="Admin-button">Admin</a> 
+              <a href="Admin-Register.php" class="Admin-button">Admin</a> 
                 <a href="Teachers-Register.php" class="Teacher-button">Teacher</a> 
                <!-- <button class="role-btn"><a href="Parent signUp.html">Parent</a></button>-->
                 <a href="Parent Register.php" class="Parent-button">Parent</a> 
             </div>
+          </div>
         </div>
     </div>
+    <script src="Welcome.js"></script>
 </body>
 </html>

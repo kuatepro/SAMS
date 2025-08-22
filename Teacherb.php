@@ -61,10 +61,11 @@ if (!empty($students)) {
   }
 </script>-->
 <body>
+  
   <nav class="sidebar">
      <img src="logo.jpg" alt="logo">
     <a href="Teacherb.php">Dashboard</a>
-    <a href="contact.php">Contact Us</a>
+   
 
     
     <a href="teacher-logout.php" onclick="return confirmLogout()" class="log"><span>Log out</span></a>
@@ -79,15 +80,13 @@ if (!empty($students)) {
     <h3>Click on a class below to take attendance or to view attendance</h3>
       
     <div class="classes">
-      <a href="calendar1.php" class="form-1">Form <span>1 </span></a>
-      <a href="calendar1.php" class="form-1">Form <span>2 </span></a> 
-      <a href="" class="form-1">Form <span>3 </span></a> 
-      <a href="" class="form-1">Form <span>4</span></a> 
-      <a href="" class="form-1" id="forms">Form <span>5</span></a> 
-      <a href="" class="form-1" id="forms">Lower sixth Arts</a> 
-      <a href="" class="form-1" id="forms">Lower sixth Science</a> 
-      <a href="" class="form-1" id="forms">Upper sixth Arts</a>
-      <a href="" class="form-1" id="forms">Upper sixth Science</a>  
+      <a href="calendar1.php?class_id=1" class="form-1">Form <span>1 </span></a>
+      <a href="calendar1.php?class_id=2" class="form-1">Form <span>2 </span></a> 
+      <a href="calendar1.php?class_id=3" class="form-1">Form <span>3 </span></a> 
+      <a href="calendar1.php?class_id=4" class="form-1">Form <span>4</span></a> 
+      <a href="calendar1.php?class_id=5" class="form-1" id="forms">Form <span>5</span></a> 
+      <a href="calendar1.php?class_id=6" class="form-1" id="forms">Lower <br>sixth </a> 
+      <a href="calendar1.php?class_id=7" class="form-1" id="forms">Upper <br>sixth </a> 
     </div>
      <div id="notif" style="background: white;padding: 10px;border-radius: 8px;margin-bottom: 15px;">
             <h3>  School notifications</h3>

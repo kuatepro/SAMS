@@ -1,7 +1,7 @@
-    SAMS Web Application
+    SAMS Web Application (SAMS)
 
 
-🏫 School Attendance & Management System (SAMS)
+
 
 Overview
 

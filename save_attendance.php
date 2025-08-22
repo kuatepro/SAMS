@@ -1,5 +1,3 @@
-
-
 <?php
 include 'db.php';
 session_start();
@@ -9,31 +7,36 @@ if (!isset($_SESSION['teacher_id'])) {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['attendance'])) {
     $teacher_id = $_SESSION['teacher_id'];
-    $attendance = $_POST['attendance']; // this will be JSON data from JS
+    $attendanceData = json_decode($_POST['attendance'], true);
 
-    $attendanceData = json_decode($attendance, true);
+    foreach ($attendanceData as $row) {
+        $student_id = intval($row['student_id']);
+        $class_id   = intval($row['class_id']); // make sure JS sends class_id
+        $date_taken = $row['date_taken'];       // renamed for consistency
+        $status     = $row['status'];
+        $week       = $row['week'] ?? null;     // optional
+        $month      = $row['month'] ?? null;    // optional
 
-    foreach ($attendanceData as $record) {
-        $student_id = $record['student_id'];
-        $date_taken = $record['date'];
-        $status = $record['status'];
-
-        // prevent duplicate (teacher shouldn’t mark twice for same date & student)
-        $check = $conn->prepare("SELECT * FROM attendance WHERE student_id=? AND date_taken=? AND teacher_id=?");
-        $check->bind_param("isi", $student_id, $date_taken, $teacher_id);
+        // Avoid duplicates
+        $check = $conn->prepare("SELECT id FROM attendance 
+                                 WHERE student_id=? AND date_taken=? AND week_number=? AND class_id=? AND teacher_id=?");
+        $check->bind_param("isiii", $student_id, $week, $class_id, $date_taken, $teacher_id);
         $check->execute();
         $result = $check->get_result();
 
-        if ($result->num_rows === 0) {
-            $stmt = $conn->prepare("INSERT INTO attendance (student_id, teacher_id, date_taken, status) VALUES (?,?,?,?)");
-            $stmt->bind_param("iiss", $student_id, $teacher_id, $date_taken, $status);
+        if ($result->num_rows == 0) {
+            $stmt = $conn->prepare("INSERT INTO attendance 
+                (student_id, teacher_id, class_id, date_taken, status, week, month) 
+                VALUES (?,?,?,?,?,?,?)");
+            $stmt->bind_param("iiissss", $student_id, $teacher_id, $class_id, $date_taken, $status, $week, $month);
             $stmt->execute();
         }
     }
 
-    echo "Attendance saved successfully!";
+    echo "✅ Attendance saved successfully!";
 }
 ?>
+
 

@@ -105,15 +105,16 @@ if (!isset($_SESSION['parent_id'])) {
                     </tr>
                 </thead>
                 <tbody>
+
                     <?php
 $parent_id = $_SESSION['parent_id'];
 
 // get only the parent’s children
-$sql = "SELECT s.student_id, s.fullname, a.date, a.status
+$sql = "SELECT s.id, s.fullname, a.date_taken, a.status
         FROM students s
-        LEFT JOIN attendance a ON s.student_id = a.student_id
+        LEFT JOIN attendance a ON s.id = a.student_id
         WHERE s.parent_id = ?
-        ORDER BY a.date DESC LIMIT 10";
+        ORDER BY a.date_taken DESC LIMIT 10";
 $stmt = $conn->prepare($sql);
 if(!$stmt) {
     die("Prepare failed: " . $conn->error);
@@ -190,16 +191,13 @@ if ($result->num_rows > 0) {
             </table>
         </section>
     </main>
-     <footer>
-        <p>Copyright &copy;SAMS ,2025</p>
-</footer>
+
     <script>
           function confirmLogout() {
       return confirm("Are you sure you want to logout from your account?");
     }
     </script>
 
- 
 </body>
 </html>
 

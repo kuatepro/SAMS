@@ -11,8 +11,12 @@ include 'db.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+     <video autoplay muted loop id="big-video">
+    <source src="img/1.mp4"></video>
+    <div class="fade-container">
         <div class="container">
         <div class="left-section">
+            
             <img src="logo.jpg" alt="logo">
             <h1>Welcome to SAMS</h1>
             <p>With SAMS you can upload  for their parents to view.</p>
@@ -24,20 +28,24 @@ include 'db.php';
             <div id="errorMsg" style="color: red; margin-bottom: 10px; text-align: center;"></div>
             <form id="registration-form" action="admin-register-process.php" method="POST" autocomplete="on">
                 <div class="input-group">
-                    <input type="text" id="full-name" name="fullname" placeholder="Full Name" required>
+                    <input type="text" id="full-name" name="fullname" placeholder="Fullname*" required>
+                     <i class="fa-solid fa-user" id="name-icon"></i>
                 </div>
                 <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Email" required>
+                    <input type="email" id="email" name="email" placeholder="Email*" required>
+                      <i class="fa-solid fa-envelope" id="email-icon"></i>
                 </div>
                <!-- <div class="input-group">
                     <input type="telephone" id="contact" placeholder="Contact" required>
                 </div>-->
                 
                     <div class="input-group">
-                        <input type="text" id="admin-id" name="admin_id" placeholder="ID" required>
+                        <input type="text" id="admin-id" name="admin_id" placeholder="ID*" required>
+                        <i class="fa-solid fa-id-badge" id="id-icon"></i>
                     </div>
                     <div class="input-group">
-                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <input type="password" id="password" name="password" placeholder="Password*" required>
+                         <i  class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
                     </div>
                 
                
@@ -48,7 +56,7 @@ include 'db.php';
                     <label>
                         <input type="checkbox" id="remember"> Remember me
                     </label>
-                    <p><a href="contact.php" class="forgot-password"><span>Forgot password</span>?</a></p>
+                    
                 </div>
                 <div id="errorMsg" style="color:red; margin-bottom:10px;"></div>
                 <button type="submit" name="register" class="btn register-btn">REGISTER</button>
@@ -60,6 +68,7 @@ include 'db.php';
             </div>
         </div>
    
+    </div>
     </div>
     <footer>
         <p>Copyright &copy; <span class="logo">SAMS</span>,2025</p>
@@ -162,10 +171,25 @@ include 'db.php';
 
     // All validations passed → form submits
 });
+
+ function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const icon = document.getElementById("eye-icon");
+
+            if  (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            }
+        }
 </script>
 
 
-</script>
+
 
 
 

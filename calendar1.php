@@ -1,5 +1,25 @@
 <?php
 include 'db.php';
+session_start();
+if (!isset($_SESSION['teacher_id'])) {
+    header("Location: teacher-login.php");
+    exit();
+}
+if (!isset($_GET['class_id'])) {
+  echo "No class selected";
+  exit();
+}
+$class_id = $_GET['class_id'];
+
+$sql = "SELECT id, fullname, matricule FROM students WHERE class = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die("Prepare failed: " . $conn->error);
+}
+
+$stmt->bind_param("i", $class_id);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -139,6 +159,7 @@ span{
   </style>
 </head>
 <body>
+  <h2>Take Attendance - class <?php echo htmlspecialchars($class_id); ?></h2>
     <!-- Sidebar -->
     <aside class="sidebar">
         <img src="logo.jpg" alt="logo" class="logo">
@@ -155,15 +176,37 @@ span{
       <label for="monthSelect">Select Month:</label>
       <select id="monthSelect"></select>
       
-      <button onclick="createWeek()">➕ Create Next Week</button>
+      
+     <!-- <button onclick="createNextWeek()">➕ Create Next Week</button>-->
 
       <label for="weekFilter">Show Week:</label>
       <select id="weekFilter">
         <option value="all">All Weeks</option>
+        <option value="all"> Week 1</option>
+        <option value="all"> Week 2</option>
+        <option value="all"> Week 3</option>
+        <option value="all"> Week 4</option>
       </select>
 
       <input type="text" id="searchInput" placeholder="🔍 Search student ">
-      <button onclick="saveAttendance()">💾 Save Attendance</button>
+      <form method="POST">
+  <?php
+  $result = $conn->query("SELECT id, fullname FROM students WHERE class_id=1"); 
+  if (!$result) {
+    die("Query failed:" . $conn->error);
+  }
+  while($row = $result->fetch_assoc()) {
+      echo "<label>{$row['fullname']}</label>";
+      echo "<select name='status[{$row['id']}]'>
+              <option value='Present'>Present</option>
+              <option value='Absent'>Absent</option>
+              <option value='Late'>Late</option>
+            </select><br>";
+  }
+  ?>
+  <button type="submit">Submit Attendance</button>
+</form>
+     
     </div>
 
 
@@ -315,7 +358,7 @@ span{
       });
     }
 
-   /* function addStudent(key, weekNum) {
+    function addStudent(key, weekNum) {
       const input = document.getElementById(`studentInput-${key}-${weekNum}`);
       const name = input.value.trim();
       if (!name) {
@@ -326,30 +369,64 @@ span{
       week.students.push({ name, attendance: Array(6).fill(null) });
       input.value = "";
       renderWeeks();
-    }*/
+    }
 
 
 
 
+
+
+const classId = <?php echo json_encode($class_id); ?>
 
 function loadStudents() {
+ 
+
+  fetch("get_students.php?class_id" + classId)
+    .then(response => response.json())
+    .then(data => {
+      const key = `${currentYear}-${currentMonth}`;
+      weeks[key] = []; // reset for this month
+
+      // create 4 weeks automatically
+      for (let i = 1; i <= 4; i++) {
+        weeks[key].push({
+          number: i,
+          students: data.map(student => ({
+            id: student.student_id,
+            name: student.fullname,
+            attendance: Array(days.length).fill(null)
+          }))
+        });
+      }
+
+      renderWeeks();
+    });
+}
+
+
+document.addEventListener("DOMContentLoaded",loadStudents);
+
+
+
+
+/*function loadStudents() {
   fetch("get_students.php")
     .then(response => response.json())
     .then(data => {
       data.forEach(student => {
         // Add each student to current week
-        weeks['${currentYear}-${currentMonth}'].forEach(week => {
+        weeks[`${currentYear}-${currentMonth}`].forEach(week => {
           week.students.push({
             id: student.student_id,
             name: student.fullname,
-            attendance: Array(daysOfWeek.length).fill(null)
+            attendance: Array(days.length).fill(null)
           });
         });
       });
       renderWeeks();
     });
 }
-
+*/
 
 
 
@@ -362,21 +439,24 @@ function loadStudents() {
     // Initial render
     renderWeeks();
 function saveAttendance() {
-  const key = '${currentYear}-${currentMonth}';
-  let attendanceData = [];
+  const key = `${currentYear}-${currentMonth}`;
+  const data = [];
 
-  if (!weeks[key]) return;
 
-  weeks[key].forEach(week => {
-    week.students.forEach(student => {
-      student.attendance.forEach((status, dayIdx) => {
-        if (status) {
-          const today = new Date(currentYear, currentMonth, (week.number-1)*7 + dayIdx + 1);
-          const dateStr = today.toISOString().split('T')[0]; 
+  weeks[key].forEach((week, weekIndex) => {
+    week.students.forEach((student) => {
+      student.attendance.forEach((status, dayIdex) => {
+        if (status !== null) {
+          const date = new Date(currentYear, currentMonth, dayIdex + 1)
+          .toISOString().split('T')[0]; 
 
-          attendanceData.push({
+          data.push({
             student_id: student.id, // you must replace with real student_id from DB
-            date: dateStr,
+            date: date,
+            class_id: classId,
+            year: currentYear,
+            week: Week.number,
+            mont: currentMonth +1,
             status: status
           });
         }
@@ -402,4 +482,9 @@ document.addEventListener("DOMContentLoaded",loadStudents);
     </footer>
 </body>
 </html>
+
+
+
+
+
 

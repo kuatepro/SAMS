@@ -67,7 +67,6 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
         <a href="adminb.php">Dashboard</a>
        
         <a href="#">Parents</a>
-        <a href="#">Teachers</a>
         <a href="#">Students</a>
         <a href="admin-logout.php" id="less" onclick="return confirmLogout()" ><span>Log out</span></a>
         
@@ -87,7 +86,7 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
         ?>
         <h1>Admin Dashboard  </h1>
         <h2>Welcome, <?php echo $_SESSION['admin_name']; ?> 👑</h2>
-        <div class="user-info">🛠 Admin</div>
+        <div class="user-info">Admin</div>
     </header>
 
     <!-- Post School Info -->
@@ -135,43 +134,29 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
             <thead>
                 <tr>
                     <th>Parent Name</th>
-                    <th>Student</th>
                     <th>Contact</th>
                     <th>Action</th>
+                   
                 </tr>
             </thead>
             <?php
-            $parents = $conn->query("SELECT  p.parent_id, p.fullname, p.phone, s.fullname AS student
-            FROM parents p 
-            LEFT JOIN students s ON p.parent_id = s.parent_id");
+            $parents = $conn->query("SELECT  p.parent_id, p.fullname, p.phone 
+            FROM parents p");
             if ($parents && $parents->num_rows > 0) {
                 while ($row = $parents->fetch_assoc()) {
                     echo "<tr>
-                     <td>{$row['fullname']}</td>;
-                     <td>{$row['student']}</td>;
-                     <td>{$row['phone']}</td>;
+                     <td>".htmlspecialchars($row['fullname'])."</td>
+                     <td>".htmlspecialchars($row['phone'])."</td>
                      <td><button onclick='removeRow(this)'>Remove</button></td>
                     </tr>";
                 }
             } else {
-                echo "<tr><td colspan='4'>No parents found.</td></tr>";
+                echo "<tr><td colspan='3'>No parents found.</td></tr>";
             }
             
            
             ?>
-           <!-- <tbody>
-                <tr>
-                    <td>Marc</td>
-                    <td>Michael Doe</td>
-                    <td>+237 670 000 000</td>
-                    <td><button onclick="removeRow(this)">Remove</button></td>
-                </tr>
-                <tr>
-                    <td>Emma</td>
-                    <td>Sarah Smith</td>
-                    <td>+237 671 111 111</td>
-                    <td><button onclick="removeRow(this)">Remove</button></td>
-                </tr>-->
+         
             </tbody>
         </table>
     </section>
@@ -185,50 +170,28 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
                     <th>Teacher Name</th>
                     <th>Subject</th>
                     <th>Contact</th>
-                    <th>Action</th>
+                    
                 </tr>
             </thead>
             <tbody>
-
-
 <?php
-$sql = "SELECT s.student_id, s.fullname, s.class, 
-               ROUND(SUM(a.status='Present') / COUNT(a.attendance_id) * 100, 1) as attendance_rate
-        FROM students s
-        LEFT JOIN attendance a ON s.student_id = a.student_id
-        GROUP BY s.student_id";
+$sql = "SELECT fullname, subject, contact FROM teachers";
 $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+if ($result && $result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         echo "<tr>";
-        echo "<td>".$row['fullname']."</td>";
-        echo "<td>".$row['class']."</td>";
-        echo "<td>".($row['attendance_rate'] ?? 0)."%</td>";
+        echo "<td>".htmlspecialchars($row['fullname'])."</td>";
+        echo "<td>".htmlspecialchars($row['subject'])."</td>";
+        echo "<td>".htmlspecialchars($row['contact'])."</td>";
         echo "</tr>";
     }
 } else {
-    echo "<tr><td colspan='3'>No students found.</td></tr>";
+    echo "<tr><td colspan='3'>No teachers found.</td></tr>";
 }
 ?>
 
-
-
-
-
-               <!-- <tr>
-                    <td>Mr. Brown</td>
-                    <td>Math</td>
-                    <td>+237 672 222 222</td>
-                    <td><button onclick="removeRow(this)">Remove</button></td>
-                </tr>
-                <tr>
-                    <td>Mrs. Johnson</td>
-                    <td>Science</td>
-                    <td>+237 673 333 333</td>
-                    <td><button onclick="removeRow(this)">Remove</button></td>
-                </tr>-->
-            </tbody>
+    </tbody>
         </table>
     </section>
 
@@ -245,13 +208,23 @@ if ($result->num_rows > 0) {
             </thead>
             <tbody>
                 <tr>
-                    <td>Michael Doe</td>
-                    <td>Form 3A</td>
+                    <td>Emma</td>
+                    <td>form 5</td>
                     <td>95%</td>
                 </tr>
                 <tr>
-                    <td>Sarah Smith</td>
-                    <td>Form 2B</td>
+                    <td>Wills</td>
+                    <td>form 2</td>
+                    <td>90%</td>
+                </tr>
+                  <tr>
+                    <td>Wilbrown</td>
+                    <td>upper sixth</td>
+                    <td>90%</td>
+                </tr>
+                  <tr>
+                    <td>Aziz</td>
+                    <td>upper sixth</td>
                     <td>90%</td>
                 </tr>
             </tbody>
@@ -280,16 +253,7 @@ if ($result->num_rows > 0) {
         });
     }
 
-    // Post School Info
-  /*  document.getElementById("postForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-        let title = document.getElementById("infoTitle").value;
-        let content = document.getElementById("infoContent").value;
-        let listItem = document.createElement("li");
-        listItem.innerHTML = `<strong>${title}</strong>: ${content}`;
-        document.getElementById("infoList").prepend(listItem);
-        this.reset();
-    });*/
+
 
        
           function confirmLogout() {

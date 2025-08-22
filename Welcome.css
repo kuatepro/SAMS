@@ -1,12 +1,13 @@
 body {
     margin: 0;
     padding: 0;
-    background: #0a3896;
+    background: #1d61e9;
     font-family: 'Segoe UI', Arial, sans-serif;
+    
 }
 
 .container {
-   background: #0a3896;
+  /* background: #0a3896;*/
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -147,4 +148,19 @@ h1 {
     object-fit: cover;
     z-index: -1;
     opacity: 0.2;
+}
+.fade-container {
+    animation: appear 0.7s  linear ;
+    
+
+}
+@keyframes appear {
+    from{
+        opacity: 0;
+        scale: 0.5;
+
+    }to {
+        opacity: 1;
+        scale: 1;
+    }
 }

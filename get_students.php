@@ -1,87 +1,51 @@
+
+
 <?php
 include 'db.php';
+session_start();
 
-$sql = "SELECT student_id, fullname FROM students";
-$result = $conn->query($sql);
-
-$students = [];
-while ($row = $result->fetch_assoc()) {
-    $students[] = $row;
+if (!isset($_GET['class_id'])) {
+    die("No class ID provided");
 }
-echo json_encode($students);
-?>
 
+$class_id = intval($_GET['class_id']);
 
+// If you also want to fetch by student for parent dashboard
+$student_id = isset($_GET['student_id']) ? intval($_GET['student_id']) : null;
 
+if ($student_id) {
+    // Fetch attendance for a single student
+    $sql = "SELECT s.student_id, s.fullname, a.date, a.status, a.week, a.month
+            FROM students s
+            LEFT JOIN attendance a ON s.student_id = a.student_id
+            WHERE s.student_id = ? 
+            ORDER BY a.date DESC";
 
-
-
-
-
-
-
-
-Perfect 👌 thanks for sending both dashboards.
-Now I can show you exactly how to integrate the attendance system into both the parent dashboard and the admin dashboard.
-
-
----
-
-✅ Step 1: Attendance Table (final simple structure)
-
-Let’s use this clean table so you don’t get foreign key errors anymore:
-
-CREATE TABLE attendance (
-    attendance_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT NOT NULL,
-    date DATE NOT NULL,
-    status ENUM('Present','Absent') NOT NULL,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE
-);
-
-No teacher link inside here (keeps it simple).
-
-Attendance is connected directly to students.
-
-Later, if you want, we can add teacher_id.
-
-
-
----
-
-✅ Step 2: Show Attendance in Parent Dashboard
-
-Replace your hardcoded attendance <tbody> with this PHP:
-
-
-
-This way, each parent only sees their own child’s attendance.
-
-
----
-
-✅ Step 3: Show Attendance in Admin Dashboard
-
-Inside the Students List section, instead of static percentages, let’s fetch from the DB:
-
-<?php
-$sql = "SELECT s.student_id, s.fullname, s.class, 
-               ROUND(SUM(a.status='Present') / COUNT(a.attendance_id) * 100, 1) as attendance_rate
-        FROM students s
-        LEFT JOIN attendance a ON s.student_id = a.student_id
-        GROUP BY s.student_id";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>".$row['fullname']."</td>";
-        echo "<td>".$row['class']."</td>";
-        echo "<td>".($row['attendance_rate'] ?? 0)."%</td>";
-        echo "</tr>";
-    }
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $student_id);
 } else {
-    echo "<tr><td colspan='3'>No students found.</td></tr>";
+    // Fetch attendance for all students in a class
+    $sql = "SELECT s.student_id, s.fullname, a.date, a.status, a.week, a.month
+            FROM students s
+            LEFT JOIN attendance a ON s.student_id = a.student_id
+            WHERE s.class_id = ?
+            ORDER BY s.fullname, a.date";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $class_id);
 }
-?>
+
+if (!$stmt) {
+    die("Prepare failed: " . $conn->error);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+$records = [];
+while ($row = $result->fetch_assoc()) {
+    $records[] = $row;
+}
+
+echo json_encode($records);
 

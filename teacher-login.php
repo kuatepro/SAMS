@@ -13,6 +13,9 @@ session_start();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+       <video autoplay muted loop id="big-video">
+    <source src="img/1.mp4"></video>
+    <div class="fade-container">
      <div class="container">
         <div class="left-section">
             <img src="logo.jpg" alt="logo">
@@ -33,10 +36,12 @@ session_start();
             <div id="errorMsg" style="color: red; margin-bottom: 10px; text-align: center;"></div>
             <form id="registration-form" action="teacher-login-process.php" method="POST">
                 <div class="input-group">
-                    <input type="text" id="email" name="email" placeholder="Email or ID" required>
+                    <input type="text" id="email" name="email" placeholder="Email*" required>
+                     <i class="fa-solid fa-envelope" id="email-icon"></i>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <input type="password" id="password" name="password" placeholder="Password*" required>
+                    <i  class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
                 </div>
                 <div class="checkbox-group">
                     <label>
@@ -55,12 +60,29 @@ session_start();
             </div>
         </div>
     </div>
+    </div>
     <footer>
         <p>Copyright &copy; <span class="logo">SAMS</span>,2025</p>
     </footer>
 
 
 
+<script>
+     function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const icon = document.getElementById("eye-icon");
+
+            if  (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            }
+        }
+</script>
 
 
 </body>

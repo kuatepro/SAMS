@@ -48,8 +48,8 @@ $children = $result->fetch_all(MYSQLI_ASSOC);
 <!-- Sidebar -->
 <nav class="sidebar">
     <h2>Attendance</h2>
-    <a href="Parentb.html">Dashboard</a>
-    <a href="contact.html">Contact Us</a>
+    <a href="Parentb.php">Dashboard</a>
+    <a href="contact.php">Contact Us</a>
    
 </nav>
 
@@ -97,6 +97,7 @@ $children = $result->fetch_all(MYSQLI_ASSOC);
             $stmt = $conn->prepare("SELECT * FROM attendance WHERE student_id = ? ORDER BY date DESC");
             $stmt->execute([$child['id']]);
             $attendance = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
 
             if (count($attendance) > 0):
                 foreach ($attendance as $row):
@@ -180,7 +181,7 @@ $children = $result->fetch_all(MYSQLI_ASSOC);
         </thead>
         <tbody>
             <tr>
-                <td>John Doe</td>
+                <td>emma</td>
                 <td>STU001</td>
                 <td>Form 1</td>
                 <td>January</td>
@@ -189,7 +190,7 @@ $children = $result->fetch_all(MYSQLI_ASSOC);
             </tr>
             
             <tr>
-                <td>Mary Jane</td>
+                <td>wilbrown</td>
                 <td>STU002</td>
                 <td>Form 2</td>
                 <td>febuary</td>
@@ -197,7 +198,7 @@ $children = $result->fetch_all(MYSQLI_ASSOC);
                 <td class="absent">60%</td>
             </tr>
             <tr>
-                <td>Peter Parker</td>
+                <td>aziz</td>
                 <td>STU003</td>
                 <td>Form 3</td>
                 <td>March</td>
@@ -205,7 +206,7 @@ $children = $result->fetch_all(MYSQLI_ASSOC);
                 <td class="present">95%</td>
             </tr>
             <tr>
-                <td>Lucy Smith</td>
+                <td>audrey</td>
                 <td>STU004</td>
                 <td>Form 1</td>
                 <td>April</td>
@@ -213,7 +214,7 @@ $children = $result->fetch_all(MYSQLI_ASSOC);
                 <td class="absent">50%</td>
             </tr>
              <tr>
-                <td>Emmanuel</td>
+                <td>marc</td>
                 <td>STU005</td>
                 <td>Form 5</td>
                 <td>May</td>

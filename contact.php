@@ -23,7 +23,7 @@ include 'db.php';
     <aside class="sidebar">
         <img src="logo.jpg" alt="logo" class="logo">
         <nav>
-            <a href="Teacherb.php">Dashboard</a>
+            <a href="Parentb.php">Dashboard</a>
           </nav>
     </aside>
 
