@@ -15,7 +15,7 @@ footer {
     padding: 20px;
     position: fixed;
     left: 0;
-    height: 10vh;
+    height: 8vh;
     right: 0;
     bottom: 0;
     background: #fff;
@@ -66,9 +66,17 @@ span{
 
 /* Main content */
 .main { 
-    flex-grow:1; 
+   /* flex-grow:1; 
     padding: 20px; 
-    overflow-y: auto; 
+    overflow-y: auto;*/
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 30px auto;
+    max-width: 1100px;
+    padding: 20px;
+
+
 }
 header { 
     font-size:1.8rem; 
@@ -81,18 +89,22 @@ header {
 /* Form styles */
 .contact-form { 
     background:white; 
-    padding:20px;
-    align-items: center; 
-    justify-content: center;
+    padding:18px;
     border-radius:8px; 
     box-shadow:0 0 8px rgba(0,0,0,0.1); 
-    max-width:600px; 
-    margin-left: 20%;
+    width:600px; 
+    /*margin-left: 20%;*/
+    
+    margin-right: 30px;
+
 }
    
 .contact-form h3 { 
     margin-bottom:15px; 
     color:#004085; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .contact-form label { 
     display:block; 
@@ -140,11 +152,16 @@ header {
 /* Contact info */
 .contact-info { 
     display:flex; 
-    flex-direction: row; 
-    gap:20px; 
-    max-width:600px;
-    margin-left: 10%; 
-    margin-top: 10px;
+    flex-direction: column; 
+    gap:40px; 
+    max-width:800px;
+    margin-left: 7%; 
+    margin-top: 0;
+    margin-bottom: 200px;
+    flex: 1;
+    margin-top: -1%;
+    padding: 30px;
+    
     
 }
 .logo{
@@ -154,12 +171,13 @@ header {
 
 .contact-info div { 
     background:white; 
-    padding:15px; 
+    padding: 35px; 
+    height: 15vh;
     border-radius:8px; 
     box-shadow:0 0 8px rgba(0,0,0,0.1); 
     display:flex; 
     align-items:center; 
-    gap:10px; 
+    gap: 5px; 
 }
 .contact-info div span { 
     font-weight:bold; 
@@ -186,3 +204,4 @@ header {
         max-width:100%; 
     }
 }
+

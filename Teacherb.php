@@ -88,6 +88,7 @@ if (!empty($students)) {
       <a href="calendar1.php?class_id=6" class="form-1" id="forms">Lower <br>sixth </a> 
       <a href="calendar1.php?class_id=7" class="form-1" id="forms">Upper <br>sixth </a> 
     </div>
+    <p></p>
      <div id="notif" style="background: white;padding: 10px;border-radius: 8px;margin-bottom: 15px;">
             <h3>  School notifications</h3>
             
