@@ -1,0 +1,136 @@
+*{
+    box-sizing:border-box;
+}
+html,body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+}
+.wrap{
+    max-width:1200px;
+    margin:24px auto;
+    padding:0 16px;
+}
+.header{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:end;
+    gap:12px;
+    margin-bottom:16px;
+}
+.header h1{
+    margin:0;
+    font-size:28px;
+}
+.header .muted{
+    margin:4px 0 0;
+    color:#667085;
+    font-size:14px;
+}
+.controls{
+    display:flex;
+    gap:10px;
+    align-items:end;
+}
+.controls label{
+    display:flex;
+    flex-direction:column;
+    font-size:12px;
+    color:#344054;
+}
+.controls input[type=month]{
+    padding:8px 10px;
+    border:1px solid #D0D5DD;
+    border-radius:10px;
+}
+button{
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid #D0D5DD;
+    background:#0ea5e9;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+}
+button.ghost{
+    background:white;
+    color:#0f172a;
+}
+button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+.panel{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    box-shadow:0 1px 2px rgba(16,24,40,.06);
+    padding:16px;
+    margin:16px 0;
+}
+.panel h2{
+    margin:0 0 12px;
+    font-size:18px;
+}
+.weeks{
+    display:grid;
+    gap:14px;
+}
+.week-table{
+    width:100%;
+    border-collapse:collapse;
+    border-spacing:0;
+    border-radius:12px;
+    border:1px solid #e5e7eb;
+}
+.week-table th,.week-table td{
+    padding:8px 10px;
+    border-bottom:1px solid #f0f2f5;
+    text-align:center;
+    font-size:14px;
+}
+.week-table th{
+    background:#f8fafc;
+    color:#334155;
+    font-weight:600;
+}
+.week-table td.name{
+    text-align:left;
+}
+.badge{
+    padding:2px 8px;
+    border-radius:999px;
+    font-size:12px;
+    border:1px solid #e5e7eb;
+    background:#f8fafc;
+    color:#334155;
+}
+.radioGroup{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+.choice{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    justify-content:center;
+}
+.summary{
+    width:100%;
+    border-collapse:collapse;
+    border-spacing:0;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+}
+.summary th,.summary td{
+    padding:8px 10px;
+    border-bottom:1px solid #f0f2f5;
+    text-align:center;
+}
+.summary th{
+    background:#f8fafc;
+}
+.row-alt:nth-child(even){
+    background:#fcfcfd;
+}

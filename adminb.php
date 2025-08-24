@@ -48,7 +48,32 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
     exit();
 }
 
+// Handle student form submission
+if (isset($_POST['add_student'])) {
+    $fullname = $_POST['student_fullname'];
+    $matricule = $_POST['student_matricule'];
+    $class = $_POST['student_class'];
+    // You may want to add parent_id if needed
+    $stmt = $conn->prepare("INSERT INTO students (fullname, matricule, class_id) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssi", $fullname, $matricule, $class);
+    $stmt->execute();
+    $stmt->close();
+    $_SESSION['message'] = "Student added successfully!";
+    header("Location: adminb.php?show=students");
+    exit();
+}
 
+// Handle parent deletion
+if (isset($_POST['delete_parent_id'])) {
+    $delete_id = $_POST['delete_parent_id'];
+    $stmt = $conn->prepare("DELETE FROM parents WHERE id = ?");
+    $stmt->bind_param("i", $delete_id);
+    $stmt->execute();
+    $stmt->close();
+    $_SESSION['message'] = "Parent deleted successfully!";
+    header("Location: adminb.php?show=parents");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,15 +90,12 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
     <img src="logo.jpg" alt="logo">
     <nav>
         <a href="adminb.php">Dashboard</a>
-       
-        <a href="#">Parents</a>
-        <a href="#">Students</a>
+        <a href="#" onclick="showSection('parents')">Parents</a>
+        <a href="add_student.php">Students</a>
+        <a href="#" onclick="showSection('teachers')">Teachers</a>
         <a href="admin-logout.php" id="less" onclick="return confirmLogout()" ><span>Log out</span></a>
-        
     </nav>
 </aside>
-
-<!-- Main Content -->
 <main class="main-content">
 
     <!-- Topbar -->
@@ -175,11 +197,30 @@ if (isset($_POST['delete_id']) && isset($_POST['delete_post'])) {
             </thead>
             <tbody>
 <?php
-$sql = "SELECT fullname, subject, contact FROM teachers";
-$result = $conn->query($sql);
 
-if ($result && $result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+
+// Example for adminb.php or parentb.php
+$sql = "SELECT a.student_id, s.fullname, a.date, a.status
+        FROM attendance a
+        JOIN students s ON a.student_id = s.id
+        ORDER BY a.date DESC LIMIT 30";
+$result1 = $conn->query($sql);
+if ($result1 && $result1->num_rows > 0) {
+    while ($row = $result1->fetch_assoc()) {
+        echo "<tr>
+            <td>{$row['fullname']}</td>
+            <td>{$row['date']}</td>
+            <td>{$row['status']}</td>
+        </tr>";
+    }
+}
+
+// Now run the teachers query and use a different result variable
+$sql = "SELECT fullname, subject, contact FROM teachers";
+$result2 = $conn->query($sql);
+
+if ($result2 && $result2->num_rows > 0) {
+    while($row = $result2->fetch_assoc()) {
         echo "<tr>";
         echo "<td>".htmlspecialchars($row['fullname'])."</td>";
         echo "<td>".htmlspecialchars($row['subject'])."</td>";
@@ -231,6 +272,130 @@ if ($result && $result->num_rows > 0) {
         </table>
     </section>
 
+    <!-- Attendance Summary Search -->
+<div>
+  <h2>Attendance Summary</h2>
+  <div style="margin-bottom:10px;">
+    <input type="text" id="searchName" placeholder="Enter student name" style="padding:5px;">
+    <input type="text" id="searchId" placeholder="Enter student ID" style="padding:5px;">
+    <button onclick="searchAttendanceSummary()" style="padding:5px 10px;">Search</button>
+    <button onclick="loadAttendanceSummary(defaultClassId)" style="padding:5px 10px;">Show All</button>
+  </div>
+  <table id="attendanceSummaryTable" border="1">
+    <thead>
+      <tr>
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Present</th>
+        <th>Absent</th>
+        <th>Late</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+    <!-- Students Form Section -->
+    <section class="card" id="studentsFormSection" style="display:none;">
+        <h2>Add Student</h2>
+        <form method="POST">
+            <label>Full Name</label>
+            <input type="text" name="student_fullname" required>
+            <label>Matricule</label>
+            <input type="text" name="student_matricule" required>
+            <label>Class</label>
+            <input type="number" name="student_class" required>
+            <button type="submit" name="add_student" class="submit-btn">Save Student</button>
+        </form>
+    </section>
+
+    <!-- Parents List Section (only visible when 'Parents' is clicked) -->
+    <section class="card" id="parentsSection" style="display:none;">
+        <h2>All Parents</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parent Name</th>
+                    <th>Contact</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            // Use id and contact instead of parent_id and phone
+            $parents = $conn->query("SELECT id, fullname, contact FROM parents");
+            if (!$parents) {
+                echo "<tr><td colspan='3'>Error: " . $conn->error . "</td></tr>";
+            } else if ($parents->num_rows > 0) {
+                while ($row = $parents->fetch_assoc()) {
+                    echo "<tr>
+                        <td>".htmlspecialchars($row['fullname'])."</td>
+                        <td>".htmlspecialchars($row['contact'])."</td>
+                        <td>
+                            <form method='POST' style='display:inline;' onsubmit=\"return confirm('Delete this parent?');\">
+                                <input type='hidden' name='delete_parent_id' value='".$row['id']."'>
+                                <button type='submit' style='background:#d9534f;color:white;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;'>Delete</button>
+                            </form>
+                        </td>
+                    </tr>";
+                }
+            } else {
+                echo "<tr><td colspan='3'>No parents found.</td></tr>";
+            }
+            ?>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Teachers List Section (only visible when 'Teachers' is clicked) -->
+    <section class="card" id="teachersSection" style="display:none;">
+        <h2>All Teachers</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Teacher ID</th>
+                    <th>Full Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            // Handle teacher deletion
+            if (isset($_POST['delete_teacher_id'])) {
+                $delete_id = $_POST['delete_teacher_id'];
+                $stmt = $conn->prepare("DELETE FROM teachers WHERE teacher_id = ?");
+                $stmt->bind_param("i", $delete_id);
+                $stmt->execute();
+                $stmt->close();
+                $_SESSION['message'] = "Teacher deleted successfully!";
+                header("Location: adminb.php?show=teachers");
+                exit();
+            }
+            $teachers = $conn->query("SELECT teacher_id, fullname FROM teachers");
+            if (!$teachers) {
+                echo "<tr><td colspan='3'>Error: " . $conn->error . "</td></tr>";
+            } else if ($teachers->num_rows > 0) {
+                while ($row = $teachers->fetch_assoc()) {
+                    echo "<tr>
+                        <td>".htmlspecialchars($row['teacher_id'])."</td>
+                        <td>".htmlspecialchars($row['fullname'])."</td>
+                        <td>
+                            <form method='POST' style='display:inline;' onsubmit=\"return confirm('Delete this teacher?');\">
+                                <input type='hidden' name='delete_teacher_id' value='".$row['teacher_id']."'>
+                                <button type='submit' style='background:#d9534f;color:white;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;'>Delete</button>
+                            </form>
+                        </td>
+                    </tr>";
+                }
+            } else {
+                echo "<tr><td colspan='3'>No teachers found.</td></tr>";
+            }
+            ?>
+            </tbody>
+        </table>
+    </section>
+
 </main>
  <footer>
         <p>Copyright &copy; <span class="logo">SAMS</span>,2025</p>
@@ -253,12 +418,81 @@ if ($result && $result->num_rows > 0) {
         });
     }
 
+    const defaultClassId = <?php echo json_encode($class_id ?? ''); ?>;
 
+function loadAttendanceSummary(classId) {
+  fetch('get_attendance_summary.php?class_id=' + encodeURIComponent(classId))
+    .then(res => res.json())
+    .then(data => {
+      renderAttendanceSummary(data.summary || []);
+    });
+}
 
-       
+function searchAttendanceSummary() {
+  const name = document.getElementById('searchName').value.trim().toLowerCase();
+  const id = document.getElementById('searchId').value.trim();
+  if (!name && !id) {
+    alert('Please enter student name or ID.');
+    return;
+  }
+  fetch('get_students.php?class_id=' + encodeURIComponent(defaultClassId))
+    .then(res => res.json())
+    .then(data => {
+      const students = data.students || [];
+      // Partial and case-insensitive match for fullname and exact match for ID
+      const student = students.find(stu =>
+        (name ? (stu.fullname && stu.fullname.toLowerCase().includes(name)) : true) &&
+        (id ? (stu.id && String(stu.id) === id) : true)
+      );
+      if (!student) {
+        renderAttendanceSummary([]);
+        alert('No student found with that name and ID.');
+        return;
+      }
+      fetch('get_attendance_summary.php?student_id=' + encodeURIComponent(student.id))
+        .then(res => res.json())
+        .then(data => {
+          renderAttendanceSummary(data.summary || []);
+        });
+    });
+}
+
+function renderAttendanceSummary(summary) {
+  const tbody = document.querySelector('#attendanceSummaryTable tbody');
+  tbody.innerHTML = '';
+  if (summary.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6">No attendance summary found.</td></tr>';
+    return;
+  }
+  summary.forEach(row => {
+    tbody.innerHTML += `<tr>
+      <td>${row.student_id}</td>
+      <td>${row.student_name}</td>
+      <td>${row.date_taken ? row.date_taken : ''}</td>
+      <td>${row.present}</td>
+      <td>${row.absent}</td>
+      <td>${row.late}</td>
+    </tr>`;
+  });
+}
+
+// Initial load: show all
+loadAttendanceSummary(defaultClassId);
+
           function confirmLogout() {
       return confirm("Are you sure you want to logout from your account?");
     }
+
+    function showSection(section) {
+    document.querySelectorAll('.card').forEach(card => card.style.display = 'none');
+    if (section === 'parents') {
+        document.getElementById('parentsSection').style.display = 'block';
+    }
+    if (section === 'teachers') {
+        document.getElementById('teachersSection').style.display = 'block';
+    }
+    // Add more sections as needed
+}
     
 </script>
 

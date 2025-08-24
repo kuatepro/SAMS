@@ -29,29 +29,25 @@ include 'db.php';
             <form id="registration-form" action="admin-register-process.php" method="POST" autocomplete="on">
                 <div class="input-group">
                     <input type="text" id="full-name" name="fullname" placeholder="Fullname*" required>
-                     <i class="fa-solid fa-user" id="name-icon"></i>
+                    <i class="fa-solid fa-user" id="name-icon"></i>
                 </div>
                 <div class="input-group">
                     <input type="email" id="email" name="email" placeholder="Email*" required>
-                      <i class="fa-solid fa-envelope" id="email-icon"></i>
+                    <i class="fa-solid fa-envelope" id="email-icon"></i>
                 </div>
-               <!-- <div class="input-group">
-                    <input type="telephone" id="contact" placeholder="Contact" required>
-                </div>-->
-                
-                    <div class="input-group">
-                        <input type="text" id="admin-id" name="admin_id" placeholder="ID*" required>
-                        <i class="fa-solid fa-id-badge" id="id-icon"></i>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" id="password" name="password" placeholder="Password*" required>
-                         <i  class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
-                    </div>
-                
-               
-               <!-- <div class="input-group">
-                    <input type="text" id="teacher-id"placeholder="Position" required>
-                </div>-->
+                <div class="input-group">
+                    <input type="text" id="admin-id" name="admin_id" placeholder="ID*" required>
+                    <i class="fa-solid fa-id-badge" id="id-icon"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Password*" required>
+                    <i  class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
+                </div>
+                <!-- Add check field for admin role -->
+                <div class="input-group">
+                    <input type="text" id="role-check" name="role_check" placeholder="Check*" required>
+                    <i class="fa-solid fa-check" id="check-icon"></i>
+                </div>
                 <div class="checkbox-group">
                     <label>
                         <input type="checkbox" id="remember"> Remember me
@@ -81,6 +77,7 @@ include 'db.php';
     let teacherId = document.getElementById('admin-id').value.trim();
     //let contact = document.getElementById('contact').value.trim();
     let password = document.getElementById('password').value;
+    let roleCheck = document.getElementById('role-check').value.trim();
    // let age = document.getElementById('age').value.trim();
    // let address = document.getElementById('address').value.trim();
    // let email = document.getElementById('email').value.trim();
@@ -137,6 +134,13 @@ include 'db.php';
         return;
     }
 
+    // Check field validation for admin
+    if (roleCheck.toLowerCase() !== "wilbrown") {
+        e.preventDefault();
+        errorMsg.textContent = "Sorry, no access to this role.";
+        return;
+    }
+
     // Age
    /* if(!age){
         e.preventDefault();
@@ -187,12 +191,5 @@ include 'db.php';
             }
         }
 </script>
-
-
-
-
-
-
-    
 </body>
 </html>

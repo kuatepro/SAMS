@@ -12,7 +12,7 @@ if (!isset($_SESSION['parent_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Parent Dashboard</title>
     <link rel="stylesheet" href="Parentb.css">
 </head>
 <body>
@@ -74,135 +74,136 @@ if (!isset($_SESSION['parent_id'])) {
         </div>
     </div>
 
-        <!-- Child Selector 
-        <section class="card">
-            <div class="search-container">
-                <div class="child-inputs-column">
-                    <input type="text" placeholder="Enter child name" id="child-name" class="child-input">
-                    <input type="text" placeholder="Enter child Matricule" id="child-matricule" class="child-input">
-                </div>
-                <button class="search-btn">Search</button>
-            </div>
-        </section>-->
 
-        <!-- Attendance Stats
-        <section class="stats">
-            <div class="stat-card">Present Days: 45% Present</div>
-            <div class="stat-card">Absent Days: 5% Present</div>
-            <div class="stat-card">Attendance Percentage: 90%</div>
-        </section> -->
-
-        <!-- Attendance Table -->
-        <section class="card">
-            <h2> Recent Attendance Records </h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Student Names</th>
-                        <th>Matricule</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    <?php
+        <?php
+// Get all children for this parent
 $parent_id = $_SESSION['parent_id'];
-
-// get only the parent’s children
-$sql = "SELECT s.id, s.fullname, a.date_taken, a.status
-        FROM students s
-        LEFT JOIN attendance a ON s.id = a.student_id
-        WHERE s.parent_id = ?
-        ORDER BY a.date_taken DESC LIMIT 10";
+$children = [];
+$sql = "SELECT id, fullname FROM students WHERE parent_id = ?";
 $stmt = $conn->prepare($sql);
-if(!$stmt) {
-    die("Prepare failed: " . $conn->error);
-}
 $stmt->bind_param("i", $parent_id);
 $stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>".$row['fullname']."</td>";
-        echo "<td>".$row['student_id']."</td>";
-        echo "<td>".$row['date']."</td>";
-        echo "<td class='".($row['status']=='Present'?'present':'absent')."'>".$row['status']."</td>";
-        echo "</tr>";
-    }
-} else {
-    echo "<tr><td colspan='4'>No attendance records found.</td></tr>";
+$res = $stmt->get_result();
+while ($row = $res->fetch_assoc()) {
+    $children[] = $row;
 }
 ?>
 
+<div>
+  <h2>Attendance Summary</h2>
+  <div style="margin-bottom:10px;">
+    <input type="text" id="searchName" placeholder="Enter student name" style="padding:5px;">
+    <input type="text" id="searchId" placeholder="Enter student ID" style="padding:5px;">
+    <button onclick="searchAttendanceSummary()" style="padding:5px 10px;">Search</button>
+    <button onclick="loadAttendanceSummary(defaultClassId)" style="padding:5px 10px;">Show All</button>
+  </div>
+  <table id="attendanceSummaryTable" border="1">
+    <thead>
+      <tr>
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Present</th>
+        <th>Absent</th>
+        <th>Late</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
-                   <!-- <tr>
-                    
-                        <td>John</td>
-                        <td>SAMS201</td>
-                        <td>2025-08-12</td>
-                        <td class="present">Present</td>
-                    </tr>
-                    <tr>
-                        <td>Wilbrown</td>
-                        <td>SAMS202</td>
-                        <td>2025-08-11</td>
-                        <td class="absent">Absent</td>
-                    </tr>
-                    <tr> 
-                        <td>Emmanuel</td>
-                        <td>SAMS203</td>
-                        <td>2025-08-10</td>
-                        <td class="present">Present</td>
-                    </tr>
-                     <tr> 
-                        <td>Anne Marie</td>
-                        <td>SAMS204</td>
-                        <td>2025-08-9</td>
-                        <td class="present">Present</td>
-                    </tr>
-                     <tr> 
-                        <td>Johnson</td>
-                        <td>SAMS205</td>
-                        <td>2025-08-8</td>
-                        <td class="absent">Absent</td>
-                    </tr>
-                     <tr> 
-                        <td>Greghor</td>
-                        <td>SAMS206</td>
-                        <td>2025-08-7</td>
-                        <td class="present">Present</td>
-                    </tr>
-                     <tr> 
-                        <td>Rayan</td>
-                        <td>SAMS207</td>
-                        <td>2025-08-6</td>
-                        <td class="absent">Absent</td>
-                    </tr>
-                     <tr> 
-                        <td>Wilson</td>
-                        <td>SAMS208</td>
-                        <td>2025-08-5</td>
-                        <td class="absent">Absent</td>
-                    </tr>-->
-                </tbody>
-            </table>
-        </section>
-    </main>
+</main>
+ <footer>
 
-    <script>
+        <p>Copyright &copy; SAMS ,2025</p>
+</footer>
+
+
+<!-- JavaScript -->
+<script>
+    // Remove row from table
+    function removeRow(btn) {
+        btn.closest("tr").remove();
+    }
+
+    // Search Parent
+    function searchParent() {
+        let input = document.getElementById("searchParent").value.toLowerCase();
+        let rows = document.querySelectorAll("#parentTable tbody tr");
+        rows.forEach(row => {
+            let name = row.cells[0].textContent.toLowerCase();
+            row.style.display = name.includes(input) ? "" : "none";
+        });
+    }
+
+    const defaultClassId = <?php echo json_encode($class_id ?? ''); ?>;
+
+function loadAttendanceSummary(classId) {
+  fetch('get_attendance_summary.php?class_id=' + encodeURIComponent(classId))
+    .then(res => res.json())
+    .then(data => {
+      renderAttendanceSummary(data.summary || []);
+    });
+}
+
+function searchAttendanceSummary() {
+  const name = document.getElementById('searchName').value.trim().toLowerCase();
+  const id = document.getElementById('searchId').value.trim();
+  if (!name && !id) {
+    alert('Please enter student name or ID.');
+    return;
+  }
+  fetch('get_students.php?class_id=' + encodeURIComponent(defaultClassId))
+    .then(res => res.json())
+    .then(data => {
+      const students = data.students || [];
+      // Partial and case-insensitive match for fullname and exact match for ID
+      const student = students.find(stu =>
+        (name ? (stu.fullname && stu.fullname.toLowerCase().includes(name)) : true) &&
+        (id ? (stu.id && String(stu.id) === id) : true)
+      );
+      if (!student) {
+        renderAttendanceSummary([]);
+        alert('No student found with that name and ID.');
+        return;
+      }
+      fetch('get_attendance_summary.php?student_id=' + encodeURIComponent(student.id))
+        .then(res => res.json())
+        .then(data => {
+          renderAttendanceSummary(data.summary || []);
+        });
+    });
+}
+
+function renderAttendanceSummary(summary) {
+  const tbody = document.querySelector('#attendanceSummaryTable tbody');
+  tbody.innerHTML = '';
+  if (summary.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6">No attendance summary found.</td></tr>';
+    return;
+  }
+  summary.forEach(row => {
+    tbody.innerHTML += `<tr>
+      <td>${row.student_id}</td>
+      <td>${row.student_name}</td>
+      <td>${row.date_taken ? row.date_taken : ''}</td>
+      <td>${row.present}</td>
+      <td>${row.absent}</td>
+      <td>${row.late}</td>
+    </tr>`;
+  });
+}
+
+// Initial load: show all
+loadAttendanceSummary(defaultClassId);
+
           function confirmLogout() {
       return confirm("Are you sure you want to logout from your account?");
     }
-    </script>
+    
+</script>
+
+
 
 </body>
 </html>
-
-
-
-
-
-

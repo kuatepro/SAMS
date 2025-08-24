@@ -1,6 +1,22 @@
 <?php
 include 'db.php';
 ?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['contact_name'] ?? '';
+    $phone = $_POST['contact_phone'] ?? '';
+    $message = $_POST['contact_message'] ?? '';
+
+    // WhatsApp API link (replace with admin's WhatsApp number)
+    $admin_whatsapp = '237650525830'; // e.g. countrycode+number, no plus sign
+    $text = urlencode("Contact Form\nName: $name\nPhone: $phone\nMessage: $message");
+    $wa_url = "https://wa.me/$admin_whatsapp?text=$text";
+
+    // Redirect to WhatsApp chat with pre-filled message
+    header("Location: $wa_url");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,9 +54,9 @@ include 'db.php';
 
 
   <!-- Contact Form -->
-  <div class="contact-form">
+  <!--<div class="contact-form">
     <h3>Send us a message</h3>
-    <form id="contactForm">
+    <form id="contactForm" method="POST">
       <label for="fullName">Fullname*</label>
       <input type="text" id="fullName" name="fullname" placeholder="Your full name" >
        <p class="error" id="fullnameError"></p>
@@ -67,6 +83,15 @@ include 'db.php';
     </form>
    
   </div>
+-->
+  <!-- WhatsApp Contact Button -->
+    <div class="contact-form" style="text-align:center; margin-top:40px;">
+        <a href="https://wa.me/237650525830?text=Hello%20Admin%2C%20I%20would%20like%20to%20send%20a%20message%20regarding%20my%20child." 
+           target="_blank" 
+           style="display:inline-block;padding:15px 30px;background:#25D366;color:white;font-size:1.2rem;border-radius:8px;text-decoration:none;">
+            <i class="fab fa-whatsapp" style="margin-right:8px;"></i> Click here to send us a message on WhatsApp
+        </a>
+    </div>
 
   <!-- Contact Info -->
   <div class="contact-info">

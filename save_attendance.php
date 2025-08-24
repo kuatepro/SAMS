@@ -1,42 +1,40 @@
 <?php
+// Add this at the top to parse JSON input
+$data = json_decode(file_get_contents('php://input'), true);
+
+if (!isset($data['attendance']) || !is_array($data['attendance'])) {
+    echo "No attendance data received.";
+    exit;
+}
 include 'db.php';
-session_start();
+// Connect to database
+// adjust path as needed
 
-if (!isset($_SESSION['teacher_id'])) {
-    echo "Unauthorized!";
-    exit();
+if (!$conn) {
+    echo "Database connection failed: " . mysqli_connect_error();
+    exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['attendance'])) {
-    $teacher_id = $_SESSION['teacher_id'];
-    $attendanceData = json_decode($_POST['attendance'], true);
+$success = true;
+foreach ($data['attendance'] as $rec) {
+    $student_id = $rec['student_id'];
+    $student_name = isset($rec['name']) ? $rec['name'] : ''; // use 'name' from frontend
+    $date_taken = $rec['date'];
+    $status = $rec['status'];
 
-    foreach ($attendanceData as $row) {
-        $student_id = intval($row['student_id']);
-        $class_id   = intval($row['class_id']); // make sure JS sends class_id
-        $date_taken = $row['date_taken'];       // renamed for consistency
-        $status     = $row['status'];
-        $week       = $row['week'] ?? null;     // optional
-        $month      = $row['month'] ?? null;    // optional
-
-        // Avoid duplicates
-        $check = $conn->prepare("SELECT id FROM attendance 
-                                 WHERE student_id=? AND date_taken=? AND week_number=? AND class_id=? AND teacher_id=?");
-        $check->bind_param("isiii", $student_id, $week, $class_id, $date_taken, $teacher_id);
-        $check->execute();
-        $result = $check->get_result();
-
-        if ($result->num_rows == 0) {
-            $stmt = $conn->prepare("INSERT INTO attendance 
-                (student_id, teacher_id, class_id, date_taken, status, week, month) 
-                VALUES (?,?,?,?,?,?,?)");
-            $stmt->bind_param("iiissss", $student_id, $teacher_id, $class_id, $date_taken, $status, $week, $month);
-            $stmt->execute();
-        }
+    $stmt = $conn->prepare("INSERT INTO attendance (student_id, student_name, date_taken, status) VALUES (?, ?, ?, ?)");
+    if ($stmt === false) {
+        $success = false;
+        echo "Prepare failed: " . $conn->error;
+        continue;
     }
-
-    echo "✅ Attendance saved successfully!";
+    $stmt->bind_param("isss", $student_id, $student_name, $date_taken, $status);
+    if (!$stmt->execute()) {
+        $success = false;
+        echo "Execute failed: " . $stmt->error;
+    }
+    $stmt->close();
 }
+
+echo $success ? "Attendance saved." : "Error saving attendance.";
 ?>
-
-

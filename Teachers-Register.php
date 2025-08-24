@@ -45,17 +45,7 @@ include 'db.php';
                     <i  class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
                 </div>
                 
-               <!-- <div class="form-gride">
-                    <div class="input-group">
-                        <input type="number" id="age" placeholder="Age" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="address" placeholder="Address" required>
-                    </div>
-                </div>
-                    <div class="input-group">
-                        <input type="email" id="email" placeholder="Email" required>
-                    </div>-->
+             
                 
                 <div class="checkbox-group">
                     <label>
@@ -69,8 +59,7 @@ include 'db.php';
             <div class="social-buttons">
                 <a href="#"><i class="fa-brands fa-google fa-" style="color: #ff0000;"></i></a>
                 <a href="#"><i class="fa-brands fa-facebook fa-bounce" style="color: #0080ff;"></i></a>
-               <!--- <button class="btn google-btn">Google</button>
-                <button class="btn facebook-btn">Facebook</button> -->
+              
             </div>
         </div>
     </div>
