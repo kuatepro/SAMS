@@ -17,7 +17,7 @@ if (isset($_POST['add_student'])) {
     }
     $stmt->close();
     $_SESSION['message'] = "Student added successfully!";
-    header("Location: adminb.php");
+    header("Location: add_student.php");
     exit();
 }
 ?>
@@ -29,6 +29,14 @@ if (isset($_POST['add_student'])) {
     <link rel="stylesheet" href="adminb.css">
 </head>
 <body>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <img src="logo.jpg" alt="logo">
+    <nav>
+        <a href="adminb.php">Dashboard</a>
+       
+    </nav>
+</aside>
 <main class="main-content">
     <h2>Add Student</h2>
     <?php
@@ -47,7 +55,11 @@ if (isset($_POST['add_student'])) {
         <button type="submit" name="add_student" class="submit-btn">Save Student</button>
     </form>
     <br>
-    <a href="adminb.php">Back to Dashboard</a>
+
 </main>
+<footer>
+    <p>Copyright &copy; <span class="logo">SAMS</span>,2025</p>
+</footer>
+
 </body>
 </html>

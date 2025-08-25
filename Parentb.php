@@ -21,7 +21,7 @@ if (!isset($_SESSION['parent_id'])) {
         <img src="logo.jpg" alt="logo" class="logo">
         <nav>
             <a href="Parentb.php">Dashboard</a>
-            <a href="studentinfo.php">My Child</a>
+           
             <a href="contact.php">Contact Us</a>
             
             <a href="parent-logout.php" onclick="return confirmLogout()"  class="log"><span>Log Out</span> </a>

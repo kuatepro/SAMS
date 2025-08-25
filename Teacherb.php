@@ -64,12 +64,12 @@ if (!empty($students)) {
     <h3>Click on a class below to take attendance or to view attendance</h3>
     <div class="classes">
       <a href="teacher_attendance.php?class=Form 1" class="form-1">Form <span>1 </span></a>
-      <a href="Teacherb.php?class=Form 2" class="form-1">Form <span>2 </span></a> 
-      <a href="Teacherb.php?class=Form 3" class="form-1">Form <span>3 </span></a> 
-      <a href="Teacherb.php?class=Form 4" class="form-1">Form <span>4</span></a> 
-      <a href="Teacherb.php?class=Form 5" class="form-1" id="forms">Form <span>5</span></a> 
-      <a href="Teacherb.php?class=Lower sixth" class="form-1" id="forms">Lower <br>sixth </a> 
-      <a href="Teacherb.php?class=Upper sixth" class="form-1" id="forms">Upper <br>sixth </a> 
+      <a href="teacher_attendance.php?class=Form 2" class="form-1">Form <span>2 </span></a> 
+      <a href="teacher_attendance.php?class=Form 3" class="form-1">Form <span>3 </span></a> 
+      <a href="teacher_attendance.php?class=Form 4" class="form-1">Form <span>4</span></a> 
+      <a href="teacher_attendance.php?class=Form 5" class="form-1" id="forms">Form <span>5</span></a> 
+      <a href="teacher_attendance.php?class=Lower sixth" class="form-1" id="forms">Lower <br>sixth </a> 
+      <a href="teacher_attendance.php?class=Upper sixth" class="form-1" id="forms">Upper <br>sixth </a> 
     </div>
     <p></p>
     <div id="notif" style="background: white;padding: 10px;border-radius: 8px;margin-bottom: 15px;">
@@ -91,18 +91,7 @@ if (!empty($students)) {
         ?>
       </ul>
     </div>
-    <h2>Recent Students Attendance (<?php echo htmlspecialchars($class); ?>)</h2>
-    <table id="attendanceTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Matricule</th>
-          <th>Class</th>
-          <th>Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
+    
       <?php if (!empty($students) && !empty($attendance)): ?>
         <?php foreach ($attendance as $row):
           $student = array_filter($students, function($s) use ($row) { return $s['id'] == $row['student_id']; });
@@ -120,7 +109,7 @@ if (!empty($students)) {
         </tr>
         <?php endforeach; ?>
       <?php else: ?>
-        <tr><td colspan="5">No attendance records found.</td></tr>
+        
       <?php endif; ?>
       </tbody>
     </table>

@@ -1,13 +1,26 @@
 <?php
-$class_id = isset($_GET["class_id"]) ? htmlspecialchars($_GET["class_id"]) : "";
-$class_name = isset($_GET["class_name"]) ? htmlspecialchars($_GET["class_name"]) : "Selected Class";
+$class = isset($_GET["class"]) ? htmlspecialchars($_GET["class"]) : "Selected Class";
+
+// Fetch students for this class from the database
+include 'db.php';
+$students = [];
+if ($class && $class !== "Selected Class") {
+    $stmt = $conn->prepare("SELECT id, fullname, matricule FROM students WHERE class = ?");
+    $stmt->bind_param("s", $class);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $students[] = $row;
+    }
+    $stmt->close();
+}
 ?>
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Attendance · <?php echo $class_name; ?></title>
+  <title>Attendance · <?php echo $class; ?></title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,12 +28,13 @@ $class_name = isset($_GET["class_name"]) ? htmlspecialchars($_GET["class_name"])
     <header class="header">
       <div class="title">
         <h1>Take Attendance</h1>
-        <p class="muted"><?php echo $class_name; ?> (ID: <?php echo $class_id; ?>)</p>
+        <p class="muted"><?php echo $class; ?></p>
       </div>
       <div class="controls">
         <label>
           <span>Month</span>
           <input id="monthInput" type="month">
+          
         </label>
         <button id="generateBtn">Generate 4 Weeks</button>
         <button id="saveBtn" class="ghost" >Save Attendance</button>
@@ -36,10 +50,36 @@ $class_name = isset($_GET["class_name"]) ? htmlspecialchars($_GET["class_name"])
       <h2>Monthly Summary</h2>
       <div id="summaryContainer"></div>
     </section>
+
+    <section class="panel">
+      <h2>Students in <?php echo htmlspecialchars($class); ?></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Matricule</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          if (count($students) > 0) {
+              foreach ($students as $stu) {
+                  echo "<tr>
+                          <td>" . htmlspecialchars($stu['fullname']) . "</td>
+                          <td>" . htmlspecialchars($stu['matricule']) . "</td>
+                        </tr>";
+              }
+          } else {
+              echo "<tr><td colspan='2'>No students found for this class.</td></tr>";
+          }
+          ?>
+        </tbody>
+      </table>
+    </section>
   </div>
 
   <script>
-    window.SAMS_CLASS_ID = <?php echo json_encode($class_id); ?>;
+    window.SAMS_CLASS = <?php echo json_encode($class); ?>;
   </script>
   <script >
     (function(){
@@ -57,7 +97,7 @@ $class_name = isset($_GET["class_name"]) ? htmlspecialchars($_GET["class_name"])
   let WEEKS = [];
 
   async function fetchStudents() {
-    const qs = new URLSearchParams({class_id: window.SAMS_CLASS_ID || ''}).toString();
+    const qs = new URLSearchParams({class: window.SAMS_CLASS || ''}).toString();
     const res = await fetch(`get_students.php?${qs}`);
     const data = await res.json();
     // Map to expected keys for rendering
@@ -222,10 +262,6 @@ $class_name = isset($_GET["class_name"]) ? htmlspecialchars($_GET["class_name"])
   }
 
   init();
-})();
-  </script>
-</body>
-</html>
 })();
   </script>
 </body>

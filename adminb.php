@@ -91,7 +91,7 @@ if (isset($_POST['delete_parent_id'])) {
     <nav>
         <a href="adminb.php">Dashboard</a>
         <a href="#" onclick="showSection('parents')">Parents</a>
-        <a href="add_student.php">Students</a>
+        <a href="add_student.php">Add a Students</a>
         <a href="#" onclick="showSection('teachers')">Teachers</a>
         <a href="admin-logout.php" id="less" onclick="return confirmLogout()" ><span>Log out</span></a>
     </nav>
@@ -237,37 +237,53 @@ if ($result2 && $result2->num_rows > 0) {
     </section>
 
     <!-- Students List -->
-    <section class="card">
+    <section class="card" id="studentsSection">
         <h2>Students</h2>
         <table>
             <thead>
                 <tr>
                     <th>Student Name</th>
                     <th>Class</th>
-                    <th>Attendance</th>
+                    <th>Matricule</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Emma</td>
-                    <td>form 5</td>
-                    <td>95%</td>
-                </tr>
-                <tr>
-                    <td>Wills</td>
-                    <td>form 2</td>
-                    <td>90%</td>
-                </tr>
-                  <tr>
-                    <td>Wilbrown</td>
-                    <td>upper sixth</td>
-                    <td>90%</td>
-                </tr>
-                  <tr>
-                    <td>Aziz</td>
-                    <td>upper sixth</td>
-                    <td>90%</td>
-                </tr>
+                <?php
+                // Handle student deletion
+                if (isset($_POST['delete_student_id'])) {
+                    $delete_id = $_POST['delete_student_id'];
+                    $stmt = $conn->prepare("DELETE FROM students WHERE id = ?");
+                    $stmt->bind_param("i", $delete_id);
+                    $stmt->execute();
+                    $stmt->close();
+                    $_SESSION['message'] = "Student deleted successfully!";
+                    header("Location: adminb.php?show=students");
+                    exit();
+                }
+                $students = $conn->query("SELECT id, fullname, class_id, matricule, class FROM students");
+                if (!$students) {
+                    echo "<tr><td colspan='4'>Error: " . $conn->error . "</td></tr>";
+                } else if ($students->num_rows > 0) {
+                    while ($row = $students->fetch_assoc()) {
+                        // Show 'class' column if it exists, otherwise fallback to 'class_id'
+                        $classValue = isset($row['class']) && $row['class'] !== '' ? $row['class'] : $row['class_id'];
+                        echo "<tr>
+                            <td>".htmlspecialchars($row['fullname'])."</td>
+                            <td>".htmlspecialchars($classValue)."</td>
+                            <td>".htmlspecialchars($row['matricule'])."</td>
+                            <td>
+                                <form method='POST' style='display:inline;' onsubmit=\"return confirm('Delete this student?');\">
+                                    <input type='hidden' name='delete_student_id' value='".$row['id']."'>
+                                    <button type='submit' style='background:#d9534f;color:white;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;'>Delete</button>
+                                </form>
+                            </td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4'>No students found.</td></tr>";
+                }
+                ?>
             </tbody>
         </table>
     </section>
@@ -490,6 +506,9 @@ loadAttendanceSummary(defaultClassId);
     }
     if (section === 'teachers') {
         document.getElementById('teachersSection').style.display = 'block';
+    }
+    if (section === 'students') {
+        document.getElementById('studentsSection').style.display = 'block';
     }
     // Add more sections as needed
 }
