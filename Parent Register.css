@@ -242,3 +242,83 @@ footer {
         scale: 1;
     }
 }
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+    .container {
+        flex-direction: column;
+        padding: 10px;
+    }
+    .left-section, .right-section {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        padding: 5px;
+    }
+    .left-section, .right-section {
+        width: 100%;
+        margin: 0;
+    }
+    .fade-container {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    body, html {
+        font-size: 15px;
+    }
+    .container {
+        flex-direction: column;
+        padding: 0;
+    }
+    .left-section, .right-section {
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+    }
+    .logo img {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    .input-group input,
+    .input-group .error,
+    .input-group i {
+        font-size: 1em;
+    }
+    .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 1em;
+    }
+    .social-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .fade-container {
+        padding: 5px;
+    }
+    .checkbox-group label {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 400px) {
+    .container {
+        padding: 0;
+    }
+    .left-section, .right-section {
+        padding: 5px;
+    }
+    h1, h2 {
+        font-size: 1.1em;
+    }
+    .btn {
+        font-size: 0.9em;
+    }
+}

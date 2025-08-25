@@ -27,31 +27,33 @@ include 'db.php';
             <h2>You register as a Parent</h2>
             <div id="errorMsg" style="color:red; margin-bottom:10px;"></div>
             <form id="registration-form" action="parent-register-process.php" method="POST" autocomplete="on">
-                <div class="input-group">
-                    <input type="text" id="fullname" name="fullname" placeholder="Fullname*" required>
-                      <i class="fa-solid fa-user" id="name-icon"></i>
-                </div>
-                <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Email*" required>
-                     <i class="fa-solid fa-envelope" id="email-icon"></i>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="contact" name="contact" placeholder="Contact*" required>
-                     <i class="fa-solid fa-phone" id="phone-icon"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Password*" required>
-                    <i  class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
-                </div>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="remember"> Remember me
-                    </label>
-                    
-                </div>
-                <div id="errorMsg" style="color:red; margin-bottom:10px;"></div>
-                <button type="submit" class="btn register-btn">REGISTER</button>
-            </form>
+    <div class="input-group">
+        <input type="text" id="fullname" name="fullname" placeholder="Fullname*">
+        <i class="fa-solid fa-user" id="name-icon"></i>
+        <div class="error" id="fullnameError" style="color:red; font-size:13px;"></div>
+    </div>
+    <div class="input-group">
+        <input type="email" id="email" name="email" placeholder="Email*">
+        <i class="fa-solid fa-envelope" id="email-icon"></i>
+        <div class="error" id="emailError" style="color:red; font-size:13px;"></div>
+    </div>
+    <div class="input-group">
+        <input type="text" id="contact" name="contact" placeholder="Contact*">
+        <i class="fa-solid fa-phone" id="phone-icon"></i>
+        <div class="error" id="contactError" style="color:red; font-size:13px;"></div>
+    </div>
+    <div class="input-group">
+        <input type="password" id="password" name="password" placeholder="Password*">
+        <i class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
+        <div class="error" id="passwordError" style="color:red; font-size:13px;"></div>
+    </div>
+    <div class="checkbox-group">
+        <label>
+            <input type="checkbox" id="remember"> Remember me
+        </label>
+    </div>
+    <button type="submit" class="btn register-btn">REGISTER</button>
+</form>
             
             <div class="social-buttons">
                 <a href="#"><i class="fa-brands fa-google fa-" style="color: #ff0000;"></i></a>
@@ -70,102 +72,61 @@ include 'db.php';
 
     <script>
 document.getElementById('registration-form').addEventListener('submit', function(e) {
-    // Prevent form submission by default
-    
+    // Clear all error messages
+    document.getElementById('fullnameError').textContent = "";
+    document.getElementById('contactError').textContent = "";
+    document.getElementById('passwordError').textContent = "";
+    document.getElementById('emailError').textContent = "";
+
     let fullname = document.getElementById('fullname').value.trim();
     let contact = document.getElementById('contact').value.trim();
     let password = document.getElementById('password').value;
     let email = document.getElementById('email').value.trim();
-    let errorMsg = document.getElementById('errorMsg');
+    let hasError = false;
 
-    // Clear previous error
-    errorMsg.textContent = "";
-
-    // Full Name
     if(!fullname){
-        e.preventDefault();
-        errorMsg.textContent = "Full Name is required!";
-        return;
-    }
-    if(fullname.length > 12){
-        e.preventDefault();
-        errorMsg.textContent = "Full Name cannot exceed 12 characters!";
-        return;
-    }
-        if(fullname.length < 5){
-        e.preventDefault();
-        errorMsg.textContent = "Full should be greater than 5 characters!";
-        return;
+        document.getElementById('fullnameError').textContent = "Please fill the Full Name field!";
+        hasError = true;
+    } else if(fullname.length > 12){
+        document.getElementById('fullnameError').textContent = "Full Name cannot exceed 12 characters!";
+        hasError = true;
+    } else if(fullname.length < 5){
+        document.getElementById('fullnameError').textContent = "Full name should be greater than 5 characters!";
+        hasError = true;
     }
 
-    // ID
-   /* if(!teacherId){
-        e.preventDefault();
-        errorMsg.textContent = "ID is required!";
-        return;
-    }*/
-
-    // Contact
     if(!contact){
-        e.preventDefault();
-        errorMsg.textContent = "Contact is required!";
-        return;
-    }
-    if(!/^\d{9}$/.test(contact)){
-        e.preventDefault();
-        errorMsg.textContent = "Contact must be exactly 9 digits!";
-        return;
+        document.getElementById('contactError').textContent = "Please fill the Contact field!";
+        hasError = true;
+    } else if(!/^\d{9}$/.test(contact)){
+        document.getElementById('contactError').textContent = "Contact must be exactly 9 digits!";
+        hasError = true;
     }
 
-    // Password
     if(!password){
-        e.preventDefault();
-        errorMsg.textContent = "Password is required!";
-        return;
-    }
-    if(password.length < 6){
-        e.preventDefault();
-        errorMsg.textContent = "Password must be at least 6 characters!";
-        return;
+        document.getElementById('passwordError').textContent = "Please fill the Password field!";
+        hasError = true;
+    } else if(password.length < 6){
+        document.getElementById('passwordError').textContent = "Password must be at least 6 characters!";
+        hasError = true;
     }
 
-    // Age
-   /* if(!age){
-        e.preventDefault();
-        errorMsg.textContent = "Age is required!";
-        return;
-    }*/
-    /*if(isNaN(age) || age < 18){
-        e.preventDefault();
-        errorMsg.textContent = "Age must be a number and at least 18!";
-        return;
-    }*/
-
-    // Address
-   /* if(!address){
-        e.preventDefault();
-        errorMsg.textContent = "Address is required!";
-        return;
-    }*/
-
-    // Email
     if(!email){
-        e.preventDefault();
-        errorMsg.textContent = "Email is required!";
-        return;
-    }
-    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    if(!emailPattern.test(email)){
-        e.preventDefault();
-        errorMsg.textContent = "Invalid email format!";
-        return;
+        document.getElementById('emailError').textContent = "Please fill the Email field!";
+        hasError = true;
+    } else {
+        let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+        if(!emailPattern.test(email)){
+            document.getElementById('emailError').textContent = "Invalid email format!";
+            hasError = true;
+        }
     }
 
-    // All validations passed → form submits
-    document.getElementById('registration-form').submit();
+    if(hasError){
+        e.preventDefault();
+    }
 });
-
- function togglePassword() {
+function togglePassword() {
             const passwordInput = document.getElementById("password");
             const icon = document.getElementById("eye-icon");
 
@@ -183,4 +144,3 @@ document.getElementById('registration-form').addEventListener('submit', function
 
 </body>
 </html>
-    

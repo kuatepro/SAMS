@@ -33,18 +33,20 @@ session_start();
                 unset($_SESSION['error']);
             }
             ?>
-            <form id="registration-form" action="admin-login-process.php" method="POST" autocomplete="off">
+            <form id="login-form" method="POST" action="admin-login-process.php">
                 <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Email*" required>
+                    <input type="text" id="email" name="email" placeholder="Email*">
                     <i class="fa-solid fa-envelope" id="email-icon"></i>
+                    <div class="error" id="emailError" style="color:red; font-size:13px;"></div>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Password*" required>
-                      <i  class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
+                    <input type="password" id="password" name="password" placeholder="Password*">
+                    <i class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
+                    <div class="error" id="passwordError" style="color:red; font-size:13px;"></div>
                 </div>
                 <div class="checkbox-group">
                     <label>
-                        <input type="checkbox" id="remember"> Remember me
+                        <input type="checkbox" id="remember" name="remember"> Remember me
                     </label>
                     <p><a href="contact.php" class="forgot-password"><span>Forgot password</span>?</a></p>
                 </div>
@@ -64,7 +66,27 @@ session_start();
     </footer>
 
 <script>
-     function togglePassword() {
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    document.getElementById('emailError').textContent = "";
+    document.getElementById('passwordError').textContent = "";
+
+    let email = document.getElementById('email').value.trim();
+    let password = document.getElementById('password').value;
+    let hasError = false;
+
+    if(!email){
+        document.getElementById('emailError').textContent = "Please fill the Email field!";
+        hasError = true;
+    }
+    if(!password){
+        document.getElementById('passwordError').textContent = "Please fill the Password field!";
+        hasError = true;
+    }
+    if(hasError){
+        e.preventDefault();
+    }
+});
+function togglePassword() {
             const passwordInput = document.getElementById("password");
             const icon = document.getElementById("eye-icon");
 

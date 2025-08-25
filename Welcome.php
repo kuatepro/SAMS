@@ -11,7 +11,7 @@ include 'db.php'
 </head>
 <body>
     <video autoplay muted loop id="big-video">
-    <source src="Video.mp4"></video>
+    <source src="img/Video.mp4"></video>
     <div class="container">
         <div class="logo">
             <img src="logo.jpg" alt="Logo" style="width: 90px; height: 90px; object-fit: contain; background: transparent; border-radius: 10px;" />

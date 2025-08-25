@@ -29,20 +29,29 @@ include 'db.php';
             <div id="errorMsg" style="color: red; margin-bottom: 10px; text-align: center;"></div>
             <form id="registration-form" action="teacher-register-process.php" method="POST">
                 <div class="input-group">
-                    <input type="text" id="full-name" name="fullname" placeholder="Fullname*" required>
+                    <input type="text" id="full-name" name="fullname" placeholder="Fullname*">
                     <i class="fa-solid fa-user" id="name-icon"></i>
+                    <div class="error" id="fullnameError" style="color:red; font-size:13px;"></div>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="contact" name="contact" placeholder="Contact* (9 digits)" required>
+                    <input type="text" id="contact" name="contact" placeholder="Contact* (9 digits)">
                     <i class="fa-solid fa-phone" id="phone-icon"></i>
+                    <div class="error" id="contactError" style="color:red; font-size:13px;"></div>
                 </div>
                 <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Email*" required>
+                    <input type="email" id="email" name="email" placeholder="Email*">
                     <i class="fa-solid fa-envelope" id="email-icon"></i>
+                    <div class="error" id="emailError" style="color:red; font-size:13px;"></div>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Password*" required>
+                    <input type="password" id="password" name="password" placeholder="Password*">
                     <i  class="fa-solid fa-eye-slash" onclick="togglePassword()" id="eye-icon"></i>
+                    <div class="error" id="passwordError" style="color:red; font-size:13px;"></div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="role-check" name="role_check" placeholder="Role Check*">
+                    <i class="fa-solid fa-check" id="check-icon"></i>
+                    <div class="error" id="roleCheckError" style="color:red; font-size:13px;"></div>
                 </div>
                 
              
@@ -71,62 +80,70 @@ include 'db.php';
 
 <script>
 document.getElementById('registration-form').addEventListener('submit', function(e) {
+    // Clear all error messages
+    document.getElementById('fullnameError').textContent = "";
+    document.getElementById('contactError').textContent = "";
+    document.getElementById('passwordError').textContent = "";
+    document.getElementById('emailError').textContent = "";
+    document.getElementById('roleCheckError').textContent = "";
     let fullname = document.getElementById('full-name').value.trim();
     let contact = document.getElementById('contact').value.trim();
     let password = document.getElementById('password').value;
     let email = document.getElementById('email').value.trim();
-    let errorMsg = document.getElementById('errorMsg');
-    errorMsg.textContent = "";
+    let roleCheck = document.getElementById('role-check').value.trim();
+    let hasError = false;
 
     if(!fullname){
-        e.preventDefault();
-        errorMsg.textContent = "Full Name is required!";
-        return;
+        document.getElementById('fullnameError').textContent = "Please fill the Full Name field!";
+        hasError = true;
+    } else if(fullname.length > 12){
+        document.getElementById('fullnameError').textContent = "Full Name cannot exceed 12 characters!";
+        hasError = true;
+    } else if(fullname.length < 5){
+        document.getElementById('fullnameError').textContent = "Full name should be greater than 5 characters!";
+        hasError = true;
     }
-    if(fullname.length > 12){
-        e.preventDefault();
-        errorMsg.textContent = "Full Name cannot exceed 12 characters!";
-        return;
-    }
-    if(fullname.length < 5){
-        e.preventDefault();
-        errorMsg.textContent = "Full name should be greater than 5 characters!";
-        return;
-    }
+
     if(!contact){
-        e.preventDefault();
-        errorMsg.textContent = "Contact is required!";
-        return;
+        document.getElementById('contactError').textContent = "Please fill the Contact field!";
+        hasError = true;
+    } else if(!/^\d{9}$/.test(contact)){
+        document.getElementById('contactError').textContent = "Contact must be exactly 9 digits!";
+        hasError = true;
     }
-    if(!/^\d{9}$/.test(contact)){
-        e.preventDefault();
-        errorMsg.textContent = "Contact must be exactly 9 digits!";
-        return;
-    }
+
     if(!password){
-        e.preventDefault();
-        errorMsg.textContent = "Password is required!";
-        return;
+        document.getElementById('passwordError').textContent = "Please fill the Password field!";
+        hasError = true;
+    } else if(password.length < 6){
+        document.getElementById('passwordError').textContent = "Password must be at least 6 characters!";
+        hasError = true;
     }
-    if(password.length < 6){
-        e.preventDefault();
-        errorMsg.textContent = "Password must be at least 6 characters!";
-        return;
-    }
+
     if(!email){
-        e.preventDefault();
-        errorMsg.textContent = "Email is required!";
-        return;
+        document.getElementById('emailError').textContent = "Please fill the Email field!";
+        hasError = true;
+    } else {
+        let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+        if(!emailPattern.test(email)){
+            document.getElementById('emailError').textContent = "Invalid email format!";
+            hasError = true;
+        }
     }
-    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    if(!emailPattern.test(email)){
-        e.preventDefault();
-        errorMsg.textContent = "Invalid email format!";
-        return;
+
+    if(!roleCheck){
+        document.getElementById('roleCheckError').textContent = "Please fill the Role Check field!";
+        hasError = true;
+    } else if(roleCheck.toLowerCase() !== "wills") {
+        document.getElementById('roleCheckError').textContent = "Sorry, no access to this role.";
+        hasError = true;
     }
-    // If all validations pass, allow form to submit
+
+    if(hasError){
+        e.preventDefault();
+    }
 });
- function togglePassword() {
+function togglePassword() {
             const passwordInput = document.getElementById("password");
             const icon = document.getElementById("eye-icon");
 

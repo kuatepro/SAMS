@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 22, 2025 at 10:46 PM
+-- Generation Time: Aug 25, 2025 at 04:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -36,17 +36,6 @@ CREATE TABLE `admins` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `admins`
---
-
-INSERT INTO `admins` (`id`, `fullname`, `admin_id`, `password`, `email`, `created_at`) VALUES
-(3, 'wills237', '1234', '$2y$10$eIfrmM3o7lBaMyK2BlfxLus2KDwpJ6y7OUq39XNnS/DD4tVRLMAmS', 'q@gmail.com', '2025-08-17 21:17:21'),
-(6, 'willswilbown', '123457', '$2y$10$eaLI/gKa7tr.QI79Gns...Qw864.gUyg2O/gy7DXNobqWjxghUKsG', 'wills@gmail.com', '2025-08-18 13:09:07'),
-(7, 'melissa', '14789', '$2y$10$JzBojqtQy5Uaeii32GvpHOC/APtG33HaZeju388YzJHK7CsGhOO/O', 'meli@gmail.com', '2025-08-18 14:41:30'),
-(29, 'amins200', '101010', '$2y$10$cS/sDhiwg7c7aFNAewJElOQc4K1SNIdx94X6BbOt0JVH9pIuwXpRm', 'admin@gmail.com', '2025-08-22 07:34:44'),
-(30, 'diminho', '0987', '$2y$10$zPhZ8n73L7MUR1iziCu49ui3M4Y3SWd6Ukf5Bs9HSlU7lU00KhKkG', 'dimi@gmail.com', '2025-08-22 12:15:28');
-
 -- --------------------------------------------------------
 
 --
@@ -56,10 +45,41 @@ INSERT INTO `admins` (`id`, `fullname`, `admin_id`, `password`, `email`, `create
 CREATE TABLE `attendance` (
   `attendance_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
-  `status` enum('Present','Absent') NOT NULL,
   `date_taken` date NOT NULL,
-  `teacher_id` int(11) NOT NULL
+  `teacher_id` int(11) NOT NULL,
+  `status` varchar(10) DEFAULT NULL,
+  `student_name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `attendance`
+--
+
+INSERT INTO `attendance` (`attendance_id`, `student_id`, `date_taken`, `teacher_id`, `status`, `student_name`) VALUES
+(61, 17, '2025-08-04', 0, 'P', 'vanessa'),
+(62, 17, '2025-08-05', 0, 'P', 'vanessa'),
+(63, 17, '2025-08-07', 0, 'P', 'vanessa'),
+(64, 17, '2025-08-08', 0, 'P', 'vanessa'),
+(65, 18, '2025-08-04', 0, 'A', 'Daniel'),
+(66, 18, '2025-08-05', 0, 'A', 'Daniel'),
+(67, 18, '2025-08-06', 0, 'L', 'Daniel'),
+(68, 19, '2025-08-04', 0, 'P', 'Joseph'),
+(69, 20, '2025-08-04', 0, 'P', 'emma'),
+(70, 21, '2025-08-04', 0, 'P', 'Bernard'),
+(71, 22, '2025-08-04', 0, 'P', 'Kelvin'),
+(72, 23, '2025-08-04', 0, 'P', 'Christ'),
+(73, 25, '2025-08-04', 0, 'A', 'Victor'),
+(74, 26, '2025-08-04', 0, 'A', 'Michael'),
+(75, 36, '2025-08-04', 0, 'P', 'Rita'),
+(76, 37, '2025-08-04', 0, 'P', 'Choky'),
+(77, 40, '2025-08-04', 0, 'A', 'Naomi'),
+(78, 42, '2025-08-04', 0, 'A', 'Esther'),
+(79, 43, '2025-08-04', 0, 'L', 'Diana'),
+(80, 44, '2025-08-04', 0, 'L', 'Patrice'),
+(81, 37, '2025-08-04', 0, 'P', 'Choky'),
+(82, 38, '2025-08-04', 0, 'A', 'Mr stark'),
+(83, 39, '2025-08-04', 0, 'P', 'sylvie'),
+(84, 40, '2025-08-04', 0, 'P', 'Naomi');
 
 -- --------------------------------------------------------
 
@@ -71,6 +91,19 @@ CREATE TABLE `classes` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `classes`
+--
+
+INSERT INTO `classes` (`id`, `name`) VALUES
+(1, 'Form 1'),
+(2, 'Form 2'),
+(3, 'Form 3'),
+(4, 'Form 4'),
+(5, 'Form 5'),
+(6, 'lower sixth'),
+(7, 'upper sixth');
 
 -- --------------------------------------------------------
 
@@ -93,12 +126,7 @@ CREATE TABLE `parents` (
 --
 
 INSERT INTO `parents` (`id`, `fullname`, `contact`, `password`, `email`, `created_at`, `user_id`) VALUES
-(1, 'wilbrown', '650525830', '$2y$10$F7W11KYTdOGYRwDOk1Ix.e.y7f7UGpIebPNaV.y9XqSpGs6xikGtq', 'wilbrown@gmail.com', '2025-08-16 23:46:12', 0),
-(5, 'brown', '650525830', '$2y$10$J/Y0rf9xRPDUkcp0AYt8uOR0agC3nnR5.JWkqbGr6ObWY.zao6tJG', 'brown@gmail.com', '2025-08-17 00:35:43', 0),
-(22, 'emmanuel', '653535353', '$2y$10$pYtxehlP7frFOIpzCisaUOLy7GWebIpH6QpV/7.kX3xMaGCqiIBIm', 'johna@gmail.com', '2025-08-18 13:17:26', 0),
-(42, 'monsieur', '633333333', '$2y$10$ik15XkGUh2rDkYR5zi84KuZ7aJyhuUmZonIAx5ASBeLfZbBVrPekO', 'parentss@gmail.com', '2025-08-21 08:58:27', 0),
-(43, 'newparent', '622525252', '$2y$10$tMLzqvBoUCSJRcivX6h4ceN.jXV4ec4yk1f/cpfpHtUgqJWaPx8na', 'parent@gmail.com', '2025-08-22 07:41:24', 0),
-(44, 'manass', '692487867', '$2y$10$4UqSt5cDxCdPPSJPoGEyZO2uFAmCommVCDWFMEnZz7MSQNAYnDNd6', 'manass@gmail.com', '2025-08-22 12:19:47', 0);
+(1, 'wilbrown', '650525830', '$2y$10$F7W11KYTdOGYRwDOk1Ix.e.y7f7UGpIebPNaV.y9XqSpGs6xikGtq', 'wilbrown@gmail.com', '2025-08-16 23:46:12', 0);
 
 -- --------------------------------------------------------
 
@@ -119,7 +147,7 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`post_id`, `title`, `content`, `posted_by`, `post_date`) VALUES
-(20, 'shcool info', 'please you guys should pay your fees\r\n\r\n', 'admin', '2025-08-19 13:56:33');
+(33, 'REGISTRATION', 'Good evening to all my falor students and parents just to announce you that registration have already started in our school', 'admin', '2025-08-24 23:06:56');
 
 -- --------------------------------------------------------
 
@@ -132,23 +160,42 @@ CREATE TABLE `students` (
   `fullname` varchar(100) NOT NULL,
   `matricule` varchar(50) NOT NULL,
   `class` varchar(50) NOT NULL,
-  `parent_id` int(11) NOT NULL,
-  `class_id` int(11) NOT NULL
+  `parent_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `fullname`, `matricule`, `class`, `parent_id`, `class_id`) VALUES
-(1, 'Emmanuel', 'sams-01', 'lower sixth', 0, 0),
-(2, 'Wilbrown', 'sams-07', 'upper sixth', 0, 0),
-(3, 'Aziz', 'sams-09', 'upper sixth', 0, 0),
-(4, 'John', 'sams-05', ' form 5', 0, 0),
-(5, 'emmanuel', 'sams01', 'form1', 0, 123),
-(6, 'aziz', 'sams01', 'form1', 0, 123),
-(7, 'john', 'sams02', 'form1', 0, 124),
-(8, 'wilbrown', 'sams03', 'form1', 0, 125);
+INSERT INTO `students` (`id`, `fullname`, `matricule`, `class`, `parent_id`) VALUES
+(17, 'vanessa', 'sams-0001', 'upper sixth', 0),
+(18, 'Daniel', 'sams-0002', 'upper sixth', 0),
+(19, 'Joseph', 'sams-0003', 'upper sixth', 0),
+(20, 'emma', 'sams-0004', 'upper sixth', 0),
+(21, 'Bernard', 'sams-0005', 'lower sixth', 0),
+(22, 'Kelvin', 'sams-0006', 'lower sixth', 0),
+(23, 'Christ', 'sams-0007', 'lower sixth', 0),
+(24, 'Richard', 'sams-0008', 'lower sixth', 0),
+(25, 'Victor', 'sams-0009', 'form 5', 0),
+(26, 'Michael', 'sams-0010', 'from 5', 0),
+(27, 'Linda', 'sams-0011', 'form 5', 0),
+(28, 'Farelle', 'sams-0012', 'form 5', 0),
+(29, 'Sarah luise', 'sams-0013', 'form 4', 0),
+(30, 'Marc', 'sams-0014', 'form 4', 0),
+(31, 'Grace', 'sams-0015', 'form 4', 0),
+(32, 'Aziz', 'sams-0016', 'form 4', 0),
+(33, 'Audrey', 'sams-0017', 'form 3', 0),
+(34, 'Shaza', 'sams-0018', 'form 3', 0),
+(35, 'Biloa', 'sams-0019', 'form 3', 0),
+(36, 'Rita', 'sams-0020', 'form 3', 0),
+(37, 'Choky', 'sams-0021', 'form 2', 0),
+(38, 'Mr stark', 'sams-0022', 'form 2', 0),
+(39, 'sylvie', 'sams-0023', 'form 2', 0),
+(40, 'Naomi', 'sams-00024', 'form 2', 0),
+(41, 'Brenda', 'sams-0025', 'form 1', 0),
+(42, 'Esther', 'sams-0026', 'form 1', 0),
+(43, 'Diana', 'sams-0027', 'form 1', 0),
+(44, 'Patrice', 'sams-0028', 'form 1', 0);
 
 -- --------------------------------------------------------
 
@@ -171,8 +218,7 @@ CREATE TABLE `teachers` (
 
 INSERT INTO `teachers` (`user_id`, `fullname`, `teacher_id`, `contact`, `password`, `email`) VALUES
 (5415220, 'wilbrown', 3, '693353586', '', ''),
-(5415231, 'emmanuel', 14, '650525830', '', ''),
-(5415232, 'nhodimi', 15, '656396098', '', '');
+(5415231, 'emmanuel', 14, '650525830', '', '');
 
 -- --------------------------------------------------------
 
@@ -269,19 +315,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `parents`
@@ -293,13 +339,13 @@ ALTER TABLE `parents`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `teachers`
