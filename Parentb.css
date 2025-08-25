@@ -45,7 +45,7 @@ body {
     width: 150px;
     text-decoration: none;
     position: relative;
-    margin-top: 240%; /* or 0, as needed */
+    margin-top: 265%; /* or 0, as needed */
     display: block;
 }
 .log:hover{

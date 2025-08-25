@@ -59,20 +59,7 @@ if (!isset($_SESSION['parent_id'])) {
             </ul>
         </div>
           <!-- Summary Cards -->
-    <div class="summary">
-        <div class="card">
-            <h3>Total Students</h3>
-            <p id="totalStudents">3000 students</p>
-        </div>
-        <div class="card">
-            <h3>Percentage present this Week</h3>
-            <p id="presentThisWeek">67%</p>
-        </div>
-         <div class="card">
-            <h3>Percentage absent this Week</h3>
-            <p id="presentThisWeek">33%</p>
-        </div>
-    </div>
+   
 
 
         <?php
@@ -81,11 +68,17 @@ $parent_id = $_SESSION['parent_id'];
 $children = [];
 $sql = "SELECT id, fullname FROM students WHERE parent_id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $parent_id);
-$stmt->execute();
-$res = $stmt->get_result();
-while ($row = $res->fetch_assoc()) {
-    $children[] = $row;
+if ($stmt) {
+    $stmt->bind_param("i", $parent_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    while ($row = $res->fetch_assoc()) {
+        $children[] = $row;
+    }
+    $stmt->close();
+} else {
+    // Debug error if query fails
+    echo "<p style='color:red;'>Error: " . $conn->error . "</p>";
 }
 ?>
 
@@ -93,7 +86,7 @@ while ($row = $res->fetch_assoc()) {
   <h2>Attendance Summary</h2>
   <div style="margin-bottom:10px;">
     <input type="text" id="searchName" placeholder="Enter student name" style="padding:5px;">
-    <input type="text" id="searchId" placeholder="Enter student ID" style="padding:5px;">
+    <input type="text" id="searchMatricule" placeholder="Enter student matricule" style="padding:5px;">
     <button onclick="searchAttendanceSummary()" style="padding:5px 10px;">Search</button>
     <button onclick="loadAttendanceSummary(defaultClassId)" style="padding:5px 10px;">Show All</button>
   </div>
@@ -148,23 +141,23 @@ function loadAttendanceSummary(classId) {
 
 function searchAttendanceSummary() {
   const name = document.getElementById('searchName').value.trim().toLowerCase();
-  const id = document.getElementById('searchId').value.trim();
-  if (!name && !id) {
-    alert('Please enter student name or ID.');
+  const matricule = document.getElementById('searchMatricule').value.trim().toLowerCase();
+  if (!name && !matricule) {
+    alert('Please enter student name or matricule.');
     return;
   }
   fetch('get_students.php?class_id=' + encodeURIComponent(defaultClassId))
     .then(res => res.json())
     .then(data => {
       const students = data.students || [];
-      // Partial and case-insensitive match for fullname and exact match for ID
+      // Partial and case-insensitive match for fullname and matricule
       const student = students.find(stu =>
         (name ? (stu.fullname && stu.fullname.toLowerCase().includes(name)) : true) &&
-        (id ? (stu.id && String(stu.id) === id) : true)
+        (matricule ? (stu.matricule && stu.matricule.toLowerCase().includes(matricule)) : true)
       );
       if (!student) {
         renderAttendanceSummary([]);
-        alert('No student found with that name and ID.');
+        alert('No student found with that name and matricule.');
         return;
       }
       fetch('get_attendance_summary.php?student_id=' + encodeURIComponent(student.id))
