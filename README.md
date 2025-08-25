@@ -52,7 +52,8 @@ Admin Dashboard
 
 
 Teacher Attendance Page
-![teacher take attendance page](<img/admin dashboard.png>)
+
+![teacher take attendance page](<img/class attendance dahboard.png>)
 
 
 
@@ -61,6 +62,7 @@ Parent Dashboard
 
 Teacher Dashboard
 ![teacher dashboard](<img/teacher dashboard.png>)
+
 
 
 
